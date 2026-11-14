@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>المفكرة — نسخة الويب</title>
+<meta name="description" content="مفكرة عربية تعمل على المتصفح: تحرير نصوص، دعم UTF-8/UTF-16/ANSI، حفظ تلقائي محلي، بحث واستبدال، دعم RTL.">
+<meta name="theme-color" content="#0f172a">
+<link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="appbar">
+    <div class="title-area">
+      <span class="logo" aria-hidden="true">📝</span>
+      <h1 id="docTitle">المفكرة</h1>
+      <span id="dirtyBadge" class="badge" hidden>غير محفوظ</span>
+    </div>
+    <nav class="toolbar" aria-label="شريط الأدوات">
+      <div class="group">
+        <button type="button" data-action="new" title="جديد (Ctrl+N)">جديد</button>
+        <button type="button" data-action="open" title="فتح (Ctrl+O)">فتح</button>
+        <button type="button" data-action="save" title="حفظ (Ctrl+S)">حفظ</button>
+        <button type="button" data-action="saveAs" title="حفظ باسم (Ctrl+Shift+S)">حفظ باسم</button>
+      </div>
+      <div class="group">
+        <button type="button" data-action="undo" title="تراجع (Ctrl+Z)">تراجع</button>
+        <button type="button" data-action="redo" title="إعادة (Ctrl+Y)">إعادة</button>
+      </div>
+      <div class="group">
+        <button type="button" data-action="find" title="بحث (Ctrl+F)">بحث</button>
+        <button type="button" data-action="replace" title="استبدال (Ctrl+H)">استبدال</button>
+        <button type="button" data-action="goto" title="انتقال إلى سطر (Ctrl+G)">سطر</button>
+      </div>
+      <div class="group">
+        <button type="button" data-action="font" title="الخط">الخط</button>
+        <button type="button" data-action="wrap" id="wrapBtn" title="التفاف النص" aria-pressed="true">التفاف</button>
+        <button type="button" data-action="dir" id="dirBtn" title="اتجاه النص">الاتجاه: تلقائي</button>
+        <button type="button" data-action="theme" id="themeBtn" title="المظهر">المظهر</button>
+      </div>
+      <div class="group">
+        <button type="button" data-action="print" title="طباعة (Ctrl+P)">طباعة</button>
+        <button type="button" data-action="about" title="حول التطبيق">حول</button>
+      </div>
+    </nav>
+  </header>
+
+  <div id="restoreBanner" class="banner" hidden>
+    <span id="restoreInfo"></span>
+    <div class="banner-actions">
+      <button type="button" id="restoreBtn" class="primary">استعادة</button>
+      <button type="button" id="discardBtn">تجاهل</button>
+    </div>
+  </div>
+
+  <main class="editor-area">
+    <textarea id="editor" spellcheck="false" autocomplete="off" autocapitalize="off" dir="auto" aria-label="محرر النص"></textarea>
+
+    <section id="findBar" class="findbar" hidden aria-label="بحث واستبدال">
+      <div class="find-row">
+        <input id="findInput" type="search" placeholder="بحث…" aria-label="نص البحث">
+        <span id="findCount" class="hint" aria-live="polite"></span>
+        <button type="button" data-find="next" title="التالي (F3)">التالي</button>
+        <button type="button" data-find="prev" title="السابق (Shift+F3)">السابق</button>
+        <label><input type="checkbox" id="matchCase"> حالة الأحرف</label>
+        <label><input type="checkbox" id="useRegex"> Regex</label>
+        <label><input type="checkbox" id="wrapSearch" checked> التفاف</label>
+        <button type="button" data-find="close" class="icon" title="إغلاق (Esc)" aria-label="إغلاق البحث">✕</button>
+      </div>
+      <div class="find-row replace-row">
+        <input id="replaceInput" type="text" placeholder="استبدال بـ…" aria-label="نص الاستبدال">
+        <button type="button" data-find="replace">استبدال</button>
+        <button type="button" data-find="replaceAll">استبدال الكل</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="statusbar">
+    <span id="docName" class="doc-name">بدون عنوان</span>
+    <span id="posInfo">سطر 1، عمود 1</span>
+    <span id="selInfo"></span>
+    <span id="counts">0 حرف</span>
+    <label class="field">الترميز <select id="encodingSel" aria-label="الترميز"></select></label>
+    <label class="field">نهاية السطر <select id="eolSel" aria-label="نهاية السطر"></select></label>
+    <span id="saveState" class="state">جاهز</span>
+  </footer>
+</div>
+
+<dialog id="fontDialog">
+  <form method="dialog" class="dialog-form">
+    <h2>الخط</h2>
+    <label>عائلة الخط
+      <select id="fontFamilySel">
+        <option value="Segoe UI">Segoe UI</option>
+        <option value="Tahoma">Tahoma</option>
+        <option value="Arial">Arial</option>
+        <option value="Noto Naskh Arabic">Noto Naskh Arabic</option>
+        <option value="Amiri">Amiri</option>
+        <option value="Traditional Arabic">Traditional Arabic</option>
+        <option value="Courier New">Courier New</option>
+        <option value="Consolas">Consolas</option>
+        <option value="system-ui">خط النظام</option>
+      </select>
+    </label>
+    <label>الحجم (px)
+      <input id="fontSizeInput" type="number" min="8" max="72" step="1" value="16">
+    </label>
+    <div class="dialog-actions">
+      <button type="submit" class="primary" id="fontApply">تطبيق</button>
+      <button type="button" id="fontCancel">إلغاء</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="gotoDialog">
+  <form method="dialog" class="dialog-form">
+    <h2>انتقال إلى السطر</h2>
+    <label>رقم السطر
+      <input id="gotoInput" type="number" min="1" step="1" value="1">
+    </label>
+    <div class="dialog-actions">
+      <button type="submit" class="primary" id="gotoApply">انتقال</button>
+      <button type="button" id="gotoCancel">إلغاء</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="aboutDialog">
+  <form method="dialog" class="dialog-form">
+    <h2>حول المفكرة — نسخة الويب</h2>
+    <p>نسخة ويب مستوحاة من المفكرة في ويندوز، مبنية بعد تحليل أداة <code>Notepad.exe</code> بالأدوات REA + Ghidra.</p>
+    <ul class="features">
+      <li>فتح/حفظ ملفات نصية مع ترميزات UTF-8 وUTF-8 BOM وUTF-16 LE/BE وANSI.</li>
+      <li>كشف تلقائي للترميز ونهاية السطر وتطبيق ميزة <code>.LOG</code>.</li>
+      <li>بحث واستبدال مع Regex، انتقال إلى سطر، إدراج التاريخ.</li>
+      <li>حفظ تلقائي محلي واستعادة المستندات غير المحفوظة.</li>
+      <li>دعم كامل للعربية واتجاه النص (RTL) ووضع داكن.</li>
+      <li>يعمل دون اتصال (PWA) وقابل للنشر على Cloudflare Pages.</li>
+    </ul>
+    <div class="dialog-actions">
+      <button type="submit" class="primary">إغلاق</button>
+    </div>
+  </form>
+</dialog>
+
+<input id="fileInput" type="file" accept=".txt,.log,.md,.json,.xml,.csv,.html,.htm,.css,.js,.ini,.yml,.yaml,text/*" hidden>
+<script type="module" src="./assets/app.js"></script>
+</body>
+</html>

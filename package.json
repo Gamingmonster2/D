@@ -1,0 +1,11 @@
+{
+  "name": "d-web-notepad",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "المفكرة — نسخة ويب (SPA) مبنية بعد تحليل Notepad.exe بـ REA + Ghidra",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test tests/codec.test.mjs"
+  }
+}

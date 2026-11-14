@@ -1,1 +1,78 @@
-# D
+# المفكرة — نسخة الويب (D)
+
+تطبيق مفكرة عربي يعمل على المتصفح (SPA) بلا خادم خلفي، مبني بعد **تحليل أداة `Notepad.exe` في ويندوز** باستخدام **REA + Ghidra** (انظر قسم «من أين جاء التصميم»).
+
+- نشر تلقائي: كل `git push` إلى فرع `main` يُنشر عبر **Cloudflare Pages**.
+- لا خادم ولا قاعدة بيانات: كل البيانات تبقى في متصفحك (IndexedDB + localStorage).
+
+## الميزات
+
+- **ملفات:** جديد (Ctrl+N)، فتح (Ctrl+O)، حفظ (Ctrl+S)، حفظ باسم (Ctrl+Shift+S)، سحب وإفلات الملفات.
+- **ترميزات:** UTF-8، UTF-8 مع BOM، UTF-16 LE، UTF-16 BE، ANSI (Windows-1256 العربية)، ANSI (Windows-1252).
+- **كشف تلقائي** للترميز (BOM + UTF-8 صارم + استدلال UTF-16 + بديل ANSI) ونهاية السطر (CRLF/LF/CR).
+- **بحث/استبدال:** التالي/السابق، التفاف البحث، حالة الأحرف، **Regex**، استبدال الكل.
+- **حفظ تلقائي محلي** للمستند الجاري + استعادة عند إعادة الفتح (IndexedDB).
+- **العربية وRTL:** واجهة عربية كاملة، اتجاه تلقائي/يمين/يسار للنص، خطوط عربية (Naskh/Amiri/Tahoma…).
+- إضافات حديثة: `.LOG` (إدراج التاريخ عند الفتح)، نقل إلى سطر (Ctrl+G)، إدراج التاريخ (F5)، وضع داكن، التفاف النص، طباعة، إحصائيات (سطر/عمود/حرف)، تسجيل Service Worker للعمل دون اتصال (PWA).
+
+## التشغيل محلياً
+
+```bash
+# أي خادم ساكنسواء، مثال:
+npx serve .
+# أو فتح index.html مباشرة (تفقد ميزات مثل اختيار ملفات النظام وPWA على file://)
+```
+
+ثم افتح `http://localhost:3000` (أو المنفذ الذي يظهر).
+
+## الاختبارات
+
+```bash
+npm test
+```
+تغطي: كشف الترميز، دورات UTF-8/16/ANSI، نهايات الأسطر، والملفات النصية.
+
+## النشر على Cloudflare Pages
+
+1. افتح [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
+2. اختر مستودع GitHub: **`Gamingmonster2/D`** (اضغط Authorize / Install إذا لزم).
+3. الإعدادات:
+   - **Project name:** `d` (سيكون الرابط المؤقت `https://d.pages.dev`).
+   - **Production branch:** `main`.
+   - **Framework preset:** `None`.
+   - **Build command:** اتركه **فارغاً**.
+   - **Build output directory:** اتركه فارغاً (الملفات في جذر المستودع).
+4. اضغط **Save and Deploy** — سيُنشر تلقائياً عند كل `git push` إلى `main`.
+5. ربط الدومين: **Custom domains** → **Set up a custom domain** → أضف الدومين (مثال يبدأ بحرف D)، ثم أضف سجل CNAME المطلوب في مزود الدومين وانتظر التحقق.
+
+> ملف `_headers` يضيف سياسات أمان (CSP، nosniff، referrer-policy…) عبر Cloudflare Pages.
+
+## بنية المشروع
+
+```
+index.html              الواجهة العربية RTL
+assets/style.css        التصميم (داكن/مضيء، طباعة، استجابة)
+assets/codec.js         الترميزات ونهايات الأسطر (منطق نقي مختبَر)
+assets/app.js           منطق التطبيق (ملفات، بحث، حفظ تلقائي، اختصارات)
+sw.js                   Service Worker للعمل دون اتصال
+manifest.webmanifest    بيانات PWA
+tests/codec.test.mjs    اختبارات Node للترميزات
+_headers                سياسات أمان Cloudflare Pages
+```
+
+## حدود معروفة
+
+- ترموزات ANSI القديمة الأخرى (مثل Windows-1251) غير معروضة في القائمة حالياً؛ المدعوم 1256/1252.
+- الحفظ إلى ملف حقيقي يتطلب متصفحاً يدعم File System Access API (Chrome/Edge)؛ وغير ذلك يعمل بالتنزيل/الرفع.
+- لا اختصارات لوحة مفاتيح عالمية (قيد المتصفح).
+
+## من أين جاء التصميم؟
+
+تم تحليل `C:\Windows\System32\notepad.exe` (الإصدار 10.0.19041.4522) بأدوات REA + Ghidra:
+- **794 دالة، 498 دالة مفككة**، 28 مكتبة + 6 Delay-Load (comdlg32 للحوارات).
+- وظائف الفتح/الحفظ (CreateFile/ReadFile/WriteFile)، كشف الترميز (IsTextUnicode + MultiByteToWideChar)، البحث/الاستبدال (FindTextW/ReplaceTextW)، إعدادات السجل (HKCU\Software\Microsoft\Notepad)، وحفظ جلسة Autosave.
+- مقارنة Win32 ↔ Web في خطة التحويل: `<مسار التقرير المحلي>` (غير منشور).
+
+## الترخيص
+
+MIT — انظر `LICENSE`.
