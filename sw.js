@@ -1,12 +1,23 @@
 /*
  * sw.js — تشغيل التطبيق دون اتصال (PWA) عبر تخزين الملفات الأساسية.
  */
-const CACHE_NAME = 'd-notepad-v5';
+const CACHE_NAME = 'd-notepad-v6';
 const ASSETS = [
   './',
   './index.html',
   './about.html',
   './about-en.html',
+  './help.html',
+  './help/using-notepad.html',
+  './help/where-notes-saved.html',
+  './help/word-count.html',
+  './help/find-replace.html',
+  './help/clean-text.html',
+  './help/txt-encodings.html',
+  './help/keyboard-shortcuts.html',
+  './help/plain-text-uses.html',
+  './help/faq.html',
+  './help/open-arabic-files-en.html',
   './guides/arabic-text-encodings.html',
   './guides/online-notepad-arabic.html',
   './llms.txt',
@@ -15,6 +26,7 @@ const ASSETS = [
   './assets/app.js',
   './assets/codec.js',
   './assets/i18n.js',
+  './assets/text-tools.js',
   './assets/icon.svg',
   './assets/icon-192.png',
   './assets/icon-512.png',

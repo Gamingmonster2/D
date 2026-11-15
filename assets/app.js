@@ -5,6 +5,7 @@
  * بحث/استبدال، إعدادات، وحفظ تلقائي محلي.
  */
 import { t, translateDocument } from './i18n.js';
+import { CLEANUPS, countWords } from './text-tools.js';
 import {
   ENCODINGS,
   EOLS,
@@ -50,6 +51,7 @@ const els = {
   findCount: document.getElementById('findCount'),
   matchCase: document.getElementById('matchCase'),
   useRegex: document.getElementById('useRegex'),
+  wholeWord: document.getElementById('wholeWord'),
   wrapSearch: document.getElementById('wrapSearch'),
   restoreBanner: document.getElementById('restoreBanner'),
   restoreInfo: document.getElementById('restoreInfo'),
@@ -71,6 +73,8 @@ const els = {
   renameInput: document.getElementById('renameInput'),
   renameApply: document.getElementById('renameApply'),
   renameCancel: document.getElementById('renameCancel'),
+  cleanDialog: document.getElementById('cleanDialog'),
+  cleanClose: document.getElementById('cleanClose'),
 };
 
 const state = {
@@ -211,7 +215,8 @@ function updateStatusBar() {
   els.posInfo.textContent = T('lineCol', { line, col: column });
   els.selInfo.textContent = start !== end ? T('selection', { n: end - start }) : '';
   const lines = countLines(value);
-  els.counts.textContent = T('counts', { chars: value.length, lines });
+  const words = countWords(value, settings.lang);
+  els.counts.textContent = T('counts', { words, chars: value.length, lines });
   if (start !== end) els.counts.textContent += ` · ${T('selection', { n: end - start })}`;
 }
 
@@ -468,6 +473,40 @@ function applyRename() {
   els.editor.focus();
 }
 
+/* ------------------------------ تنظيف النص ------------------------------ */
+
+function applyCleanup(kind) {
+  const operation = CLEANUPS[kind];
+  if (!operation) return;
+  const selectionStart = els.editor.selectionStart;
+  const selectionEnd = els.editor.selectionEnd;
+  const hasSelection = selectionStart !== selectionEnd;
+  const source = hasSelection ? els.editor.value.slice(selectionStart, selectionEnd) : els.editor.value;
+  const result = operation(source, settings.lang);
+  els.cleanDialog.close();
+  if (result == null || result === source) {
+    setSaveState(T('cleanNothing'));
+    return;
+  }
+  els.editor.focus();
+  if (hasSelection) els.editor.setSelectionRange(selectionStart, selectionEnd);
+  else els.editor.setSelectionRange(0, els.editor.value.length);
+  let inserted = false;
+  try {
+    inserted = document.execCommand('insertText', false, result);
+  } catch {
+    inserted = false;
+  }
+  if (!inserted) {
+    if (hasSelection) els.editor.setRangeText(result, selectionStart, selectionEnd, 'end');
+    else els.editor.value = result;
+    els.editor.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  markDirty();
+  updateStatusBar();
+  setSaveState(T('cleaned'));
+}
+
 /* ------------------------------ الترميز ونهاية السطر ------------------------------ */
 
 function syncSelects() {
@@ -525,44 +564,41 @@ function closeFind() {
   els.editor.focus();
 }
 
+const REGEX_SPECIALS = /[.*+?^${}()|[\]\\]/g;
+
+function escapeRegExp(text) {
+  return text.replace(REGEX_SPECIALS, '\\$&');
+}
+
 function buildFindSpec() {
   const query = els.findInput.value;
   els.findInput.classList.remove('invalid');
   if (!query) return null;
   const matchCase = els.matchCase.checked;
   const regex = els.useRegex.checked;
-  let compiled = null;
-  if (regex) {
-    try {
-      compiled = new RegExp(query, matchCase ? 'g' : 'gi');
-    } catch {
-      els.findInput.classList.add('invalid');
-      els.findCount.textContent = T('invalidPattern');
-      return null;
-    }
+  const wholeWord = els.wholeWord.checked && !regex;
+  const flags = 'gu' + (matchCase ? '' : 'i');
+  let source = regex ? query : escapeRegExp(query);
+  if (wholeWord) source = `(?<![\\p{L}\\p{N}_])(?:${source})(?![\\p{L}\\p{N}_])`;
+  try {
+    const compiled = new RegExp(source, flags);
+    return { query, matchCase, regex, wholeWord, compiled };
+  } catch {
+    els.findInput.classList.add('invalid');
+    els.findCount.textContent = T('invalidPattern');
+    return null;
   }
-  return { query, matchCase, regex, compiled };
 }
 
 function collectMatches(spec, value) {
   const matches = [];
   if (!spec) return matches;
-  if (spec.regex) {
-    const re = new RegExp(spec.compiled.source, spec.compiled.flags.includes('i') ? 'gi' : 'g');
-    let match;
-    while ((match = re.exec(value)) !== null) {
-      matches.push({ start: match.index, end: match.index + match[0].length });
-      if (match[0].length === 0) re.lastIndex += 1;
-      if (matches.length >= 20000) break;
-    }
-    return matches;
-  }
-  let index = 0;
-  while (index <= value.length) {
-    const found = value.indexOf(spec.query, index);
-    if (found === -1) break;
-    matches.push({ start: found, end: found + spec.query.length });
-    index = found + (spec.query.length || 1);
+  const flags = spec.compiled.flags.includes('g') ? spec.compiled.flags : spec.compiled.flags + 'g';
+  const re = new RegExp(spec.compiled.source, flags);
+  let match;
+  while ((match = re.exec(value)) !== null) {
+    matches.push({ start: match.index, end: match.index + match[0].length });
+    if (match[0].length === 0) re.lastIndex += 1;
     if (matches.length >= 20000) break;
   }
   return matches;
@@ -615,15 +651,12 @@ function replaceCurrent() {
   const end = els.editor.selectionEnd;
   const selected = els.editor.value.slice(start, end);
   const replacement = els.replaceInput.value;
+  const noGlobal = spec.compiled.flags.replace('g', '');
   let matched = false;
-  if (spec.regex) {
-    try {
-      matched = new RegExp(`^(?:${spec.compiled.source})$`, spec.compiled.flags.includes('i') ? 'i' : '').test(selected);
-    } catch {
-      matched = false;
-    }
-  } else {
-    matched = selected === spec.query;
+  try {
+    matched = new RegExp(`^(?:${spec.compiled.source})$`, noGlobal).test(selected);
+  } catch {
+    matched = false;
   }
   if (!matched) {
     findNext(1);
@@ -631,7 +664,7 @@ function replaceCurrent() {
   }
   let replaced;
   if (spec.regex) {
-    replaced = selected.replace(new RegExp(spec.compiled.source, spec.compiled.flags.includes('i') ? 'i' : ''), replacement);
+    replaced = selected.replace(new RegExp(spec.compiled.source, noGlobal), replacement);
   } else {
     replaced = replacement;
   }
@@ -645,17 +678,13 @@ function replaceAll() {
   const spec = buildFindSpec();
   if (!spec) return;
   const value = els.editor.value;
-  let next = value;
-  if (spec.regex) {
-    const re = new RegExp(spec.compiled.source, spec.compiled.flags.includes('i') ? 'gi' : 'g');
-    if (re.test('')) {
-      els.findCount.textContent = T('emptyPattern');
-      return;
-    }
-    next = value.replace(re, els.replaceInput.value);
-  } else {
-    next = value.split(spec.query).join(els.replaceInput.value);
+  const flags = spec.compiled.flags.includes('g') ? spec.compiled.flags : spec.compiled.flags + 'g';
+  const re = new RegExp(spec.compiled.source, flags);
+  if (re.test('')) {
+    els.findCount.textContent = T('emptyPattern');
+    return;
   }
+  const next = spec.regex ? value.replace(re, els.replaceInput.value) : value.replace(re, () => els.replaceInput.value);
   if (next === value) {
     els.findCount.textContent = T('noResults');
     return;
@@ -824,6 +853,7 @@ function handleAction(action) {
     case 'dir': toggleDir(); break;
     case 'theme': toggleTheme(); break;
     case 'print': printDocument(); break;
+    case 'clean': els.cleanDialog.showModal(); break;
     case 'about': els.aboutDialog.showModal(); break;
     case 'install': installApp(); break;
     case 'lang': applyLanguage(true); break;
@@ -867,6 +897,12 @@ function bindEvents() {
       findNext(event.shiftKey ? -1 : 1);
     }
   });
+  els.matchCase.addEventListener('change', refreshFindCount);
+  els.wholeWord.addEventListener('change', refreshFindCount);
+  els.useRegex.addEventListener('change', () => {
+    els.wholeWord.disabled = els.useRegex.checked;
+    refreshFindCount();
+  });
   els.wrapSearch.addEventListener('change', refreshFindCount);
 
   els.restoreBanner.addEventListener('click', (event) => {
@@ -899,6 +935,11 @@ function bindEvents() {
     applyRename();
   });
   els.renameCancel.addEventListener('click', () => els.renameDialog.close());
+
+  els.cleanClose.addEventListener('click', () => els.cleanDialog.close());
+  for (const button of document.querySelectorAll('[data-clean]')) {
+    button.addEventListener('click', () => applyCleanup(button.dataset.clean));
+  }
 
   els.fontApply.addEventListener('click', (event) => {
     event.preventDefault();

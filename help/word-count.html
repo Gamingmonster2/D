@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>كيف تُعدّ الكلمات والحروف والأسطر في المفكرة؟ | do.com.ly</title>
+<meta name="description" content="شرح دقيق لعدّادات المفكرة أونلاين: الكلمات والحروف والأسطر ورقم السطر والعمود والتحديد، وكيف تُحسب الكلمات العربية واليابانية والإيموجي.">
+<meta name="keywords" content="عدّ الكلمات, عدّ الحروف, عدد الأسطر, عدادات النص, حساب الكلمات العربية">
+<link rel="canonical" href="https://do.com.ly/help/word-count.html">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="كيف تُعدّ الكلمات والحروف والأسطر؟">
+<meta property="og:description" content="معنى كل رقم في شريط الحالة، وكيف تُحسب الكلمات والحروف بدقة.">
+<meta property="og:url" content="https://do.com.ly/help/word-count.html">
+<meta property="og:image" content="https://do.com.ly/assets/og-image.png">
+<link rel="stylesheet" href="../assets/about.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "كيف تُعدّ الكلمات والحروف والأسطر في المفكرة؟",
+  "inLanguage": "ar",
+  "url": "https://do.com.ly/help/word-count.html",
+  "description": "شرح عدادات الكلمات والحروف والأسطر والتحديد في المفكرة أونلاين.",
+  "isPartOf": { "@type": "WebSite", "name": "المفكرة", "url": "https://do.com.ly/" }
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../"><img src="../assets/icon.svg" alt="شعار المفكرة" width="28" height="28"> المفكرة</a>
+  <nav><a href="../">افتح المفكرة</a><a href="../help.html">دليل الاستخدام</a><a href="../about.html">عن المفكرة</a></nav>
+</header>
+<main>
+  <h1>كيف تُعدّ الكلمات والحروف والأسطر؟</h1>
+  <p class="lead">شريط الحالة أسفل المحرر يعرض العدّادات أثناء الكتابة: الموقع (سطر وعمود)، الكلمات، الحروف، والأسطر. وإذا حددت جزءاً من النص ظهر بجانبها عدد ما حددته.</p>
+
+  <h2>ما الذي يقيسه كل رقم؟</h2>
+  <ul>
+    <li><strong>الكلمات:</strong> تُقسم باستخدام مقسّم الكلمات في المتصفح (<code>Intl.Segmenter</code>)، لذا تكون دقيقة للعربية، ولغات بلا مسافات مثل Japanese والصينية، وليس «كلمة واحدة» كما تفعل العدادات البسيطة.</li>
+    <li><strong>الحروف:</strong> عدد وحدات النص في المتصفح. الحروف العربية واللاتينية حرف واحد لكل حرف، بينما قد يُحسب الإيموجي والرموز المركّبة أكثر من وحدة — لهذا قد يختلف الرقم عن عدّادات تعتمد على «ما تراه العين».</li>
+    <li><strong>الأسطر:</strong> تُعدّ بفواصل الأسطر؛ النص الفارغ يُحسب سطراً واحداً، والسطر الأخير الفارغ يُحسب أيضاً.</li>
+    <li><strong>السطر والعمود:</strong> موضع المؤشر الحالي (العمود يبدأ من 1).</li>
+    <li><strong>التحديد:</strong> عند تحديد نص يظهر عدد حروف التحديد فقط — مفيد للتحقق من طول فقرة أو منشور.</li>
+  </ul>
+
+  <h2>أمثلة سريعة</h2>
+  <table>
+    <thead><tr><th>النص</th><th>الكلمات</th><th>الحروف</th><th>الأسطر</th></tr></thead>
+    <tbody>
+      <tr><td>Hello world</td><td>2</td><td>11</td><td>1</td></tr>
+      <tr><td>مرحبا بالعالم</td><td>2</td><td>13</td><td>1</td></tr>
+      <tr><td>(فارغ)</td><td>0</td><td>0</td><td>1</td></tr>
+      <tr><td>سطر أول<br>سطر ثانٍ</td><td>4</td><td>15</td><td>2</td></tr>
+    </tbody>
+  </table>
+  <p>الأرقام تختلف قليلاً بين المتصفحات لأن تقسيم الكلمات والإيموجي يتبع معايير المتصفح نفسه. الغرض من العدّاد مساعدتك على التقدير، لا الامتثال الدقيق لحد منشور.</p>
+
+  <h2>عدّاد للتحقق من طول النص</h2>
+  <p>إذا كنت تكتب وصفاً لموقع (Meta description) أو منشوراً، حدّد النص الذي تريد قياسه بالضبط، واقرأ «تحديد: N» في شريط الحالة أو حروف التحديد — هكذا تتحقق من فقرة واحدة دون حساب بقية المستند.</p>
+
+  <div class="card">
+    <h3>ذات صلة</h3>
+    <ul>
+      <li><a href="./find-replace.html">البحث والاستبدال</a></li>
+      <li><a href="./clean-text.html">تنظيف النص الملصوق</a></li>
+      <li><a href="./using-notepad.html">كيف أستخدم المفكرة؟</a></li>
+    </ul>
+    <p><a class="cta" href="../">جرّب العدّادات الآن</a></p>
+  </div>
+</main>
+<footer>
+  <p>المفكرة — do.com.ly · <a href="../help.html">دليل الاستخدام</a> · <a href="../">التطبيق</a></p>
+</footer>
+</body>
+</html>

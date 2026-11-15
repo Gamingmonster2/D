@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Open Arabic (ANSI/Windows-1256) and UTF-16 .txt Files Online | Notepad</title>
+<meta name="description" content="Step-by-step guide: open Arabic ANSI (Windows-1256), UTF-16 and UTF-8 .txt files in the browser with Notepad (do.com.ly), fix garbled text, and save with the right encoding and line endings.">
+<meta name="keywords" content="open arabic text file online, ANSI Windows-1256, UTF-16 file, garbled text fix, online notepad encoding, CRLF LF">
+<link rel="canonical" href="https://do.com.ly/help/open-arabic-files-en.html">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Open Arabic and UTF-16 .txt Files Online">
+<meta property="og:description" content="Fix garbled Arabic text and save files with the right encoding — all in the browser.">
+<meta property="og:url" content="https://do.com.ly/help/open-arabic-files-en.html">
+<meta property="og:image" content="https://do.com.ly/assets/og-image.png">
+<link rel="stylesheet" href="../assets/about.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Open Arabic (ANSI/Windows-1256) and UTF-16 .txt Files Online",
+  "inLanguage": "en",
+  "url": "https://do.com.ly/help/open-arabic-files-en.html",
+  "description": "Guide to opening Arabic ANSI and UTF-16 text files in the browser and saving with correct encodings.",
+  "isPartOf": { "@type": "WebSite", "name": "Notepad", "url": "https://do.com.ly/" }
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../"><img src="../assets/icon.svg" alt="Notepad logo" width="28" height="28"> Notepad</a>
+  <nav><a href="../">Open Notepad</a><a href="../about-en.html">About</a><a href="../help.html" lang="ar" hreflang="ar">العربية</a></nav>
+</header>
+<main>
+  <h1>How to open Arabic (ANSI/Windows-1256) and UTF-16 .txt files online</h1>
+  <p class="lead">If an Arabic text file shows up as Latin gibberish such as «ãÑÍÈÇ», the file was probably saved in an old ANSI encoding and opened as UTF-8 (or the other way around). You can read and fix it entirely in the browser with <a href="../">Notepad</a>.</p>
+
+  <h2>Step by step</h2>
+  <ol>
+    <li>Open <a href="../">Notepad</a> and click <strong>Open</strong> (or drag the file into the window).</li>
+    <li>The app guesses the encoding: BOM first, then strict UTF-8, then UTF-16 patterns, then ANSI (Windows-1256).</li>
+    <li>If the text is still garbled, change the <strong>Encoding</strong> selector in the status bar — try <strong>ANSI (Windows-1256)</strong>, <strong>UTF-16 LE</strong> or <strong>UTF-16 BE</strong>.</li>
+    <li>Once the text looks correct, click <strong>Save as</strong> and choose <strong>UTF-8</strong> — the modern, universal choice.</li>
+  </ol>
+
+  <h2>Encoding cheat sheet</h2>
+  <table>
+    <thead><tr><th>File came from</th><th>Likely encoding</th><th>Garbled example</th></tr></thead>
+    <tbody>
+      <tr><td>Legacy Arabic Windows app</td><td>ANSI Windows-1256</td><td>ãÑÍÈÇ instead of مرحبا</td></tr>
+      <tr><td>Windows Notepad / Excel Unicode export</td><td>UTF-16 LE (with BOM)</td><td>Spaced-out or missing characters</td></tr>
+      <tr><td>Modern web / cross-platform</td><td>UTF-8 (optionally BOM)</td><td>cafÃ© instead of café</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Line endings (CRLF vs LF)</h2>
+  <p>Windows files usually end lines with CRLF (0D 0A), while Unix/macOS and the web use LF (0A). Notepad detects the style on open and lets you choose it before saving, so scripts and config files keep working on the target system.</p>
+
+  <h2>Why the browser is safe for this</h2>
+  <p>The file is read locally by your browser and never uploaded. Saved files are written to your device, and unsaved work is autosaved in your browser storage with a restore bar after a reload.</p>
+
+  <h2>Related guides</h2>
+  <ul>
+    <li><a href="../about-en.html">About Notepad — features and FAQ</a></li>
+    <li><a href="../guides/arabic-text-encodings.html" lang="ar" hreflang="ar">دليل الترميزات بالعربية (Arabic encoding guide)</a></li>
+  </ul>
+
+  <div class="card">
+    <h3>Try it now</h3>
+    <p>No sign-up, no upload. Open your file and fix the text in seconds.</p>
+    <p><a class="cta" href="../">Open Notepad</a></p>
+  </div>
+</main>
+<footer>
+  <p>Notepad — do.com.ly · <a href="../">App</a> · <a href="../help.html" lang="ar" hreflang="ar">دليل الاستخدام</a></p>
+</footer>
+</body>
+</html>

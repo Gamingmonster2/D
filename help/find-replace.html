@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>البحث والاستبدال: مطابقة حالة الأحرف والكلمة كاملة | المفكرة</title>
+<meta name="description" content="دليل البحث والاستبدال في المفكرة أونلاين: مطابقة حالة الأحرف، الكلمة كاملة بدعم العربية، التعابير النمطية Regex، استبدال الكل، والتراجع خطوة واحدة — مع أمثلة عملية.">
+<meta name="keywords" content="بحث واستبدال, الكلمة كاملة, مطابقة حالة الأحرف, Regex, استبدال الكل">
+<link rel="canonical" href="https://do.com.ly/help/find-replace.html">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="البحث والاستبدال: حالة الأحرف والكلمة كاملة">
+<meta property="og:description" content="أمثلة عملية على البحث والاستبدال مع مطابقة الحالة والكلمة كاملة وRegex.">
+<meta property="og:url" content="https://do.com.ly/help/find-replace.html">
+<meta property="og:image" content="https://do.com.ly/assets/og-image.png">
+<link rel="stylesheet" href="../assets/about.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "البحث والاستبدال: مطابقة حالة الأحرف والكلمة كاملة",
+  "inLanguage": "ar",
+  "url": "https://do.com.ly/help/find-replace.html",
+  "description": "دليل البحث والاستبدال في المفكرة أونلاين مع أمثلة.",
+  "isPartOf": { "@type": "WebSite", "name": "المفكرة", "url": "https://do.com.ly/" }
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../"><img src="../assets/icon.svg" alt="شعار المفكرة" width="28" height="28"> المفكرة</a>
+  <nav><a href="../">افتح المفكرة</a><a href="../help.html">دليل الاستخدام</a><a href="../about.html">عن المفكرة</a></nav>
+</header>
+<main>
+  <h1>البحث والاستبدال: مطابقة حالة الأحرف والكلمة كاملة</h1>
+  <p class="lead">اضغط <kbd>Ctrl</kbd>+<kbd>F</kbd> للبحث أو <kbd>Ctrl</kbd>+<kbd>H</kbd> للبحث والاستبدال. تفتح اللوحة فوق المحرر: خانة البحث، الاستبدال به، وخيارات مطابقة حالة الأحرف، الكلمة كاملة، Regex، والتفاف البحث.</p>
+
+  <h2>الحركة بين النتائج</h2>
+  <ul>
+    <li><kbd>Enter</kbd> في خانة البحث = النتيجة التالية.</li>
+    <li><kbd>Shift</kbd>+<kbd>Enter</kbd> = النتيجة السابقة.</li>
+    <li><kbd>F3</kbd> = بحث/التالي، و<kbd>Shift</kbd>+<kbd>F3</kbd> = السابق.</li>
+    <li><kbd>Esc</kbd> = إغلاق لوحة البحث والعودة للمحرر.</li>
+  </ul>
+
+  <h2>مثال عملي: cat concat Cat</h2>
+  <p>لنفترض أن النص هو <code>cat concat Cat</code> وأردت استبدال كلمة cat فقط بكلمة dog:</p>
+  <ol>
+    <li>ابحث عن <code>cat</code>.</li>
+    <li>أطفئ «مطابقة حالة الأحرف» (ليجد cat وCat).</li>
+    <li>شغّل <strong>«كلمة كاملة»</strong>.</li>
+    <li>اضغط «استبدال الكل».</li>
+  </ol>
+  <p><strong>النتيجة:</strong> <code>dog concat dog</code> — لم تُستبدل cat داخل concat. أما بدون «كلمة كاملة» فستصبح <code>dog condog dog</code>.</p>
+  <p>خيار «كلمة كاملة» يعمل مع أي أبجدية: في العربية يجد «كتاب» وحدها دون «الكتاب» و«بكتاب»، ويدعم حدود الكلمات اليونيكودية بدقة.</p>
+
+  <h2>مطابقة حالة الأحرف</h2>
+  <p>عند تشغيلها يتميّز <code>Cat</code> عن <code>cat</code>؛ وعند إطفائها يُعاملان ككلمتين متطابقتين. للعربية لا يوجد فرق عملي (لا توجد حالة أحرف في العربية).</p>
+
+  <h2>التعابير النمطية (Regex)</h2>
+  <p>شغّل «Regex» لكتابة نمط متقدم، مثل:</p>
+  <ul>
+    <li><code>\d+</code> — كل الأرقام المتتالية.</li>
+    <li><code>\s{2,}</code> — مسافتان أو أكثر.</li>
+    <li><code>^سطر</code> — الأسطر التي تبدأ بكلمة «سطر».</li>
+    <li><code>([أ-ي]+)@</code> — مجموعات قبل علامة @ (مثال تقريبي).</li>
+  </ul>
+  <p>ملاحظة: عند تفعيل Regex يتم تجاهل خيار «كلمة كاملة» (يمكنك كتابة الحدود داخل النمط نفسه).</p>
+
+  <h2>استبدال الكل والتراجع</h2>
+  <p>«استبدال الكل» يستبدل كل النتائج دفعة واحدة، و<kbd>Ctrl</kbd>+<kbd>Z</kbd> يتراجع عن العملية كاملة بضغطة واحدة.</p>
+
+  <div class="card">
+    <h3>ذات صلة</h3>
+    <ul>
+      <li><a href="./clean-text.html">تنظيف النص الملصوق</a></li>
+      <li><a href="./word-count.html">عدّ الكلمات والحروف</a></li>
+      <li><a href="./faq.html">الأسئلة الشائعة</a></li>
+    </ul>
+    <p><a class="cta" href="../">جرّب البحث الآن</a></p>
+  </div>
+</main>
+<footer>
+  <p>المفكرة — do.com.ly · <a href="../help.html">دليل الاستخدام</a> · <a href="../">التطبيق</a></p>
+</footer>
+</body>
+</html>

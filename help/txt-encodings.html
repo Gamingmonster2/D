@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فتح ملفات .txt وحفظها: الترميزات ونهايات الأسطر | المفكرة</title>
+<meta name="description" content="كيف تفتح ملف ‎.txt في المفكرة أونلاين وتحفظه: ترميزات UTF-8 وUTF-8 BOM وUTF-16 LE/BE وANSI (Windows-1256/1252)، كشف تلقائي، نهايات الأسطر CRLF/LF/CR، وعلامة BOM — مع أمثلة بايتات.">
+<meta name="keywords" content="فتح ملف txt, حفظ ملف txt, ترميزات الملفات, UTF-8 BOM, UTF-16, ANSI Windows-1256, CRLF, LF, نهاية السطر">
+<link rel="canonical" href="https://do.com.ly/help/txt-encodings.html">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="فتح ملفات ‎.txt وحفظها: الترميزات ونهايات الأسطر">
+<meta property="og:description" content="دليل عملي للترميزات ونهايات الأسطر عند فتح وحفظ الملفات النصية.">
+<meta property="og:url" content="https://do.com.ly/help/txt-encodings.html">
+<meta property="og:image" content="https://do.com.ly/assets/og-image.png">
+<link rel="stylesheet" href="../assets/about.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "فتح ملفات ‎.txt وحفظها: الترميزات ونهايات الأسطر",
+  "inLanguage": "ar",
+  "url": "https://do.com.ly/help/txt-encodings.html",
+  "description": "دليل الترميزات ونهايات الأسطر للملفات النصية في المفكرة أونلاين.",
+  "isPartOf": { "@type": "WebSite", "name": "المفكرة", "url": "https://do.com.ly/" }
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../"><img src="../assets/icon.svg" alt="شعار المفكرة" width="28" height="28"> المفكرة</a>
+  <nav><a href="../">افتح المفكرة</a><a href="../help.html">دليل الاستخدام</a><a href="../about.html">عن المفكرة</a></nav>
+</header>
+<main>
+  <h1>فتح ملفات ‎.txt وحفظها: الترميزات ونهايات الأسطر</h1>
+  <p class="lead">الملف النصي مجرد بايتات؛ الترميز ونهايات الأسطر هما ما يحددان كيف تُقرأ هذه البايتات. حين تفتح ملفاً عربياً قديماً أو تحفظ نصاً لبرنامج آخر، فهم هذين العاملين يوفّر عليك نصوصاً مشوّهة.</p>
+
+  <h2>الترميزات التي تدعمها المفكرة</h2>
+  <table>
+    <thead><tr><th>الترميز</th><th>الاستخدام الشائع</th></tr></thead>
+    <tbody>
+      <tr><td>UTF-8</td><td>المعيار الحديث للويب ومعظم الملفات (يدعم العربية كاملة).</td></tr>
+      <tr><td>UTF-8 مع BOM</td><td>لبرامج ويندوز القديمة وExcel التي تحتاج علامة BOM.</td></tr>
+      <tr><td>UTF-16 LE</td><td>ملفات ويندوز اليونيكودية (بايتان لكل حرف).</td></tr>
+      <tr><td>UTF-16 BE</td><td>ترميز يونيكود بترتيب بايتات معاكس (أنظمة أخرى).</td></tr>
+      <tr><td>ANSI (Windows-1256)</td><td>ملفات عربية قديمة من برامج ويندوز العربية.</td></tr>
+      <tr><td>ANSI (Windows-1252)</td><td>نصوص لاتينية/أوروبية قديمة.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>الكشف التلقائي</h2>
+  <p>عند فتح ملف، تحاول المفكرة قراءة علامة BOM أولاً، ثم تتأكد إن كان UTF-8 صالحاً، ثم تستنتج UTF-16 من نمط البايتات، وإن لم تنجح تفتحه بترميز ANSI الافتراضي (Windows-1256). إذا ظهر النص مشوّهاً، فتحه من جديد بترميز آخر من قائمة شريط الحالة كافٍ غالباً.</p>
+
+  <h2>نهايات الأسطر</h2>
+  <ul>
+    <li><strong>Windows (CRLF):</strong> بايتان 0D 0A — الشائع في ملفات ويندوز.</li>
+    <li><strong>Unix (LF):</strong> بايت واحد 0A — المعتاد في Linux وmacOS الحديث وملفات الويب.</li>
+    <li><strong>Macintosh (CR):</strong> بايت واحد 0D — ملفات ماك القديمة.</li>
+  </ul>
+  <p>مثال: النص <code>a⏎b</code> إذا حُفظ بترميز UTF-8 مع BOM ونهايات CRLF، تكون بايتاته: <code>EF BB BF 61 0D 0A 62</code>.</p>
+
+  <h2>الافتراضيات عند الحفظ</h2>
+  <p>تُحفظ الملفات افتراضياً بترميز <strong>UTF-8</strong> ونهايات أسطر <strong>CRLF</strong>. يمكنك تغيير الترميز ونهاية السطر من شريط الحالة قبل الحفظ، أو اختيار الترميز عند «حفظ باسم». يوضح شريط الحالة ما سيُحفظ به النص («سيُحفظ بـ…»، «سيُحفظ بنهاية سطر…»).</p>
+
+  <h2>متى أختار ماذا؟</h2>
+  <ul>
+    <li>ملف يُرسل عبر البريد أو يُرفع لموقع: UTF-8 وLF.</li>
+    <li>ملف سكربت أو إعدادات: UTF-8 بلا BOM، ونهايات LF (إلا إذا طلب برنامج آخر غير ذلك).</li>
+    <li>ملف لبرنامج ويندوز قديم: UTF-8 مع BOM أو ANSI حسب البرنامج.</li>
+    <li>قراءة أرشيف عربي قديم: ANSI (Windows-1256)، ثم احفظ نسخة حديثة UTF-8.</li>
+  </ul>
+
+  <div class="card">
+    <h3>ذات صلة</h3>
+    <ul>
+      <li><a href="../guides/arabic-text-encodings.html">دليل الترميزات العربية المفصّل (مشاكل النصوص المشوّهة)</a></li>
+      <li><a href="./where-notes-saved.html">أين تُحفظ ملاحظاتي؟</a></li>
+      <li><a href="./clean-text.html">تنظيف النص الملصوق</a></li>
+    </ul>
+    <p><a class="cta" href="../">افتح ملفاً الآن</a></p>
+  </div>
+</main>
+<footer>
+  <p>المفكرة — do.com.ly · <a href="../help.html">دليل الاستخدام</a> · <a href="../">التطبيق</a></p>
+</footer>
+</body>
+</html>

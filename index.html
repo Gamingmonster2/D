@@ -80,6 +80,7 @@
         <button type="button" data-action="find" data-i18n="find" data-i18n-title="titleFind">بحث</button>
         <button type="button" data-action="replace" data-i18n="replace" data-i18n-title="titleReplace">استبدال</button>
         <button type="button" data-action="goto" data-i18n="goto" data-i18n-title="titleGoto">سطر</button>
+        <button type="button" data-action="clean" data-i18n="clean" data-i18n-title="titleClean">تنظيف</button>
       </div>
       <div class="group">
         <button type="button" data-action="font" data-i18n="font" data-i18n-title="titleFont">الخط</button>
@@ -114,6 +115,7 @@
         <button type="button" data-find="next" data-i18n="next">التالي</button>
         <button type="button" data-find="prev" data-i18n="prev">السابق</button>
         <label><input type="checkbox" id="matchCase"> <span data-i18n="matchCase">حالة الأحرف</span></label>
+        <label><input type="checkbox" id="wholeWord"> <span data-i18n="wholeWord">كلمة كاملة</span></label>
         <label><input type="checkbox" id="useRegex"> <span data-i18n="regex">Regex</span></label>
         <label><input type="checkbox" id="wrapSearch" checked> <span data-i18n="wrapSearch">التفاف</span></label>
         <button type="button" data-find="close" class="icon" data-i18n-title="close" title="إغلاق (Esc)" data-i18n-aria-label="close" aria-label="إغلاق البحث">✕</button>
@@ -203,12 +205,33 @@
     </ul>
     <p data-i18n="aboutSeoBody"></p>
     <p class="about-links"><span data-i18n="aboutLinks">صفحات التعريف:</span>
+      <a href="./help.html" data-i18n="helpPage">دليل الاستخدام</a> ·
       <a href="./about.html" data-i18n="aboutPage">عن المفكرة (عربي)</a> ·
       <a href="./about-en.html" data-i18n="aboutPageEn">About Notepad (English)</a>
     </p>
     <p class="install-hint" data-i18n="aboutInstall"></p>
     <div class="dialog-actions">
       <button type="submit" class="primary" data-i18n="closeAbout">إغلاق</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="cleanDialog">
+  <form method="dialog" class="dialog-form">
+    <h2 data-i18n="cleanTitle">تنظيف النص</h2>
+    <p class="install-hint" data-i18n="cleanHint">يعمل على النص المحدد، أو على المستند كاملاً إن لم يوجد تحديد. يمكنك التراجع بـ Ctrl+Z.</p>
+    <div class="clean-grid">
+      <button type="button" data-clean="merge" data-i18n="cleanMerge">دمج الأسطر المقطوعة</button>
+      <button type="button" data-clean="spaces" data-i18n="cleanSpaces">إزالة المسافات الزائدة</button>
+      <button type="button" data-clean="empty" data-i18n="cleanEmpty">إزالة الأسطر الفارغة</button>
+      <button type="button" data-clean="dupes" data-i18n="cleanDupes">إزالة الأسطر المكررة</button>
+      <button type="button" data-clean="sort" data-i18n="cleanSort">ترتيب الأسطر أبجدياً</button>
+      <button type="button" data-clean="upper" data-i18n="cleanUpper">أحرف لاتينية كبيرة</button>
+      <button type="button" data-clean="lower" data-i18n="cleanLower">أحرف لاتينية صغيرة</button>
+      <button type="button" data-clean="title" data-i18n="cleanTitleCase">حرف كبير في أول كل كلمة</button>
+    </div>
+    <div class="dialog-actions">
+      <button type="button" id="cleanClose" class="primary" data-i18n="closeAbout">إغلاق</button>
     </div>
   </form>
 </dialog>

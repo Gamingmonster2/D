@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>أين تُحفظ ملاحظاتي في المفكرة أونلاين؟ وهل يمكن أن تختفي؟ | do.com.ly</title>
+<meta name="description" content="شرح دقيق لتخزين المفكرة أونلاين: الحفظ التلقائي في IndexedDB، الإعدادات في localStorage، حفظ الملفات على جهازك، ومتى تُحذف البيانات (التصفح المتخفي، مسح بيانات الموقع، امتلاء القرص).">
+<meta name="keywords" content="أين تحفظ المفكرة, حفظ ملاحظات المتصفح, اختفاء الملاحظات, IndexedDB, مسح بيانات الموقع">
+<link rel="canonical" href="https://do.com.ly/help/where-notes-saved.html">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="أين تُحفظ ملاحظاتي، وهل يمكن أن تختفي؟">
+<meta property="og:description" content="كل شيء عن تخزين بيانات المفكرة محلياً في المتصفح، وكيف تحمي عملك بنسخة احتياطية.">
+<meta property="og:url" content="https://do.com.ly/help/where-notes-saved.html">
+<meta property="og:image" content="https://do.com.ly/assets/og-image.png">
+<link rel="stylesheet" href="../assets/about.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "أين تُحفظ ملاحظاتي، وهل يمكن أن تختفي؟",
+  "inLanguage": "ar",
+  "url": "https://do.com.ly/help/where-notes-saved.html",
+  "description": "شرح تخزين بيانات المفكرة في المتصفح ومتى تُفقد.",
+  "isPartOf": { "@type": "WebSite", "name": "المفكرة", "url": "https://do.com.ly/" }
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../"><img src="../assets/icon.svg" alt="شعار المفكرة" width="28" height="28"> المفكرة</a>
+  <nav><a href="../">افتح المفكرة</a><a href="../help.html">دليل الاستخدام</a><a href="../about.html">عن المفكرة</a></nav>
+</header>
+<main>
+  <h1>أين تُحفظ ملاحظاتي، وهل يمكن أن تختفي؟</h1>
+  <p class="lead">الإجابة المختصرة: <strong>على جهازك، داخل متصفحك فقط</strong> — لا يُرسل أي محتوى إلى خادم، ولهذا لا يوجد حساب ولا نسخة ثانية تلقائية. هذه التفاصيل مهمة لتفهم متى تبقى بياناتك ومتى يمكن أن تضيع.</p>
+
+  <h2>ماذا يُخزَّن وأين؟</h2>
+  <table>
+    <thead><tr><th>البيانات</th><th>مكان التخزين</th><th>ملاحظات</th></tr></thead>
+    <tbody>
+      <tr><td>المستند الحالي وعنوانه (الحفظ التلقائي)</td><td><strong>IndexedDB</strong> (قاعدة بيانات المتصفح)</td><td>يُحفظ أثناء الكتابة ويُستعاد بعد إعادة الفتح</td></tr>
+      <tr><td>الإعدادات (اللغة، الترميز، نهاية السطر، الخط، المظهر)</td><td><strong>localStorage</strong></td><td>بيانات صغيرة تبقى بعد إغلاق المتصفح</td></tr>
+      <tr><td>ملفاتك المحفوظة</td><td>جهازك عبر <strong>File System Access</strong> أو التنزيل</td><td>هذه وحدها تنجو من مسح بيانات المتصفح</td></tr>
+      <tr><td>ملفات التطبيق للعمل دون اتصال</td><td><strong>Cache API</strong> (Service Worker)</td><td>يمكن حذفها في أي وقت دون فقد عملك المحفوظ كملف</td></tr>
+    </tbody>
+  </table>
+
+  <h2>متى يمكن أن تختفي الملاحظات؟</h2>
+  <ul>
+    <li><strong>التصفح المتخفي/الخاص:</strong> قد لا يُحفظ شيء بعد إغلاق الجلسة.</li>
+    <li><strong>مسح بيانات الموقع:</strong> من إعدادات المتصفح («حذف ملفات تعريف الارتباط وبيانات المواقع») أو ببرامج تنظيف.</li>
+    <li><strong>امتلاء القرص:</strong> قد يحذف المتصفح بيانات مواقع قديمة تلقائياً.</li>
+    <li><strong>Safari و«قاعدة الأيام السبعة»:</strong> عند منع التتبع قد يحذف Safari بيانات المواقع التي لم تُستخدم لسبعة أيام.</li>
+    <li><strong>تغيير المتصفح أو الجهاز أو ملف التعريف:</strong> البيانات لا تنتقل تلقائياً؛ سترى ورقة فارغة.</li>
+  </ul>
+
+  <h2>كيف تحمي عملك؟ قاعدة ذهبية</h2>
+  <p><strong>كل ما يؤسفك فقدانه يستحق ملفاً.</strong> استخدم «حفظ باسم» لحفظ النص كملف ‎.txt على جهازك، أو انسخ النص إلى مكان آمن قبل إغلاق الجهاز. الملف المحفوظ لا يمسّه مسح بيانات المتصفح.</p>
+  <p>يمكنك أيضاً استخدام زر «طباعة / حفظ PDF» للحصول على نسخة للقراءة فقط، أو نسخ النص كاملاً بزر «نسخ الكل» في قائمة التحرير.</p>
+
+  <h2>هل يمكن النقل إلى حاسوب آخر؟</h2>
+  <p>نعم بطريقة بسيطة: احفظ الملف من الجهاز الأول («حفظ باسم»)، ثم افتحه في المفكرة على الجهاز الثاني بزر «فتح». وبما أن الملف يحمل ترميزه ونهايات أسطره، يظهر كما هو.</p>
+
+  <h2>هل بياناتي خاصة؟</h2>
+  <p>نعم؛ لا يُرسل المحتوى إلى أي خادم ولا يوجد تتبّع للمحتوى. لاحظ أن Cloudflare (مزوّد الاستضافة) قد يسجّل إحصاءات زيارة عامة إن كان Web Analytics مفعّلاً في الحساب، لكنها لا ترى نصوص ملاحظاتك.</p>
+
+  <div class="card">
+    <h3>ذات صلة</h3>
+    <ul>
+      <li><a href="./using-notepad.html">كيف أستخدم المفكرة أونلاين؟</a></li>
+      <li><a href="./txt-encodings.html">فتح وحفظ ملفات ‎.txt والترميزات</a></li>
+      <li><a href="./faq.html">الأسئلة الشائعة</a></li>
+    </ul>
+    <p><a class="cta" href="../">افتح المفكرة</a></p>
+  </div>
+</main>
+<footer>
+  <p>المفكرة — do.com.ly · <a href="../help.html">دليل الاستخدام</a> · <a href="../">التطبيق</a></p>
+</footer>
+</body>
+</html>
