@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ترميزات النصوص العربية: UTF-8 وANSI وUTF-16 — دليل مبسّط | المفكرة</title>
+<meta name="description" content="لماذا تظهر النصوص العربية مشوّهة؟ دليل مبسّط لترميزات UTF-8 وUTF-16 وANSI (Windows-1256)، والفرق بينها، وكيف تفتح ملفاً عربياً وتحوّله وترمّمه مرة أخرى من المتصفح.">
+<meta name="keywords" content="ترميز النصوص العربية, UTF-8, ANSI, Windows-1256, UTF-16, نصوص مشوهة, تحويل ترميز, فتح ملف عربي">
+<link rel="canonical" href="https://do.com.ly/guides/arabic-text-encodings.html">
+<link rel="alternate" hreflang="ar" href="https://do.com.ly/guides/arabic-text-encodings.html">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ترميزات النصوص العربية: UTF-8 وANSI وUTF-16 — دليل مبسّط">
+<meta property="og:description" content="دليل عملي لفهم الترميزات العربية وإصلاح النصوص المشوّهة والتحويل بين UTF-8 وUTF-16 وANSI من المتصفح.">
+<meta property="og:url" content="https://do.com.ly/guides/arabic-text-encodings.html">
+<meta property="og:image" content="https://do.com.ly/assets/og-image.png">
+<link rel="stylesheet" href="../assets/about.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "ترميزات النصوص العربية: UTF-8 وANSI وUTF-16 — دليل مبسّط",
+  "inLanguage": "ar",
+  "url": "https://do.com.ly/guides/arabic-text-encodings.html",
+  "description": "دليل عملي لفهم ترميزات النصوص العربية (UTF-8، UTF-16، ANSI) وإصلاح النصوص المشوّهة والتحويل بينها من المتصفح.",
+  "isPartOf": { "@type": "WebSite", "name": "المفكرة", "url": "https://do.com.ly/" },
+  "publisher": { "@type": "Person", "name": "[Saif al-Din] | Game Dev" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "لماذا يظهر النص العربي مشوّهاً أو رموزاً؟", "acceptedAnswer": { "@type": "Answer", "text": "لأن البرنامج يقرأ الملف بترميز مختلف عن الذي كُتب به. مثلاً ملف محفوظ بترميز ANSI (Windows-1256) يُفتح كأنه UTF-8 فتظهر رموز غريبة." } },
+    { "@type": "Question", "name": "ما الفرق بين UTF-8 وUTF-16 وANSI؟", "acceptedAnswer": { "@type": "Answer", "text": "UTF-8 ترميز عالمي متغير الطول يدعم كل اللغات، UTF-16 يستخدم بايتين لكل حرف (LE/BE)، وANSI ترميز قديم مرتبط بلغة النظام؛ النسخة العربية منه هي Windows-1256." } },
+    { "@type": "Question", "name": "كيف أفتح ملفاً عربياً بترميز ANSI؟", "acceptedAnswer": { "@type": "Answer", "text": "افتح الملف في المفكرة (do.com.ly)، اختر الترميز ANSI (Windows-1256) من شريط الحالة، وسيظهر النص، ثم احفظه بترميز UTF-8 إن أردت." } }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../"><img src="../assets/icon.svg" alt="شعار المفكرة" width="28" height="28"> المفكرة</a>
+  <nav><a href="../">افتح المفكرة</a><a href="../about.html">عن المفكرة</a><a href="./online-notepad-arabic.html">دليل المفكرة أونلاين</a></nav>
+</header>
+<main>
+  <h1>ترميزات النصوص العربية: UTF-8 وANSI وUTF-16 — دليل مبسّط</h1>
+  <p class="lead">إذا ظهرت نصوص عربية على شكل رموز غريبة مثل «Ø£Ù‡Ù„Ø§» فالمشكلة ليست في اللغة نفسها بل في <strong>الترميز</strong>. هذا الدليل يشرح الفرق ببساطة، ويوضح كيف تفتح أي ملف عربي وتصلحه من المتصفح.</p>
+
+  <h2>ما هو ترميز النص؟</h2>
+  <p>الترميز (Encoding) هو طريقة تحويل الحروف إلى بايتات يقرأها الحاسوب. الحرف العربي الواحد يمكن تخزينه بطرق مختلفة؛ إن قرأ البرنامج البايتات بطريقة أخرى ظهر النص مشوّهاً. لهذا تفتح ملفات عربية وقديمة في بعض البرامج فتراها سليمة، وفي أخرى غير مفهومة.</p>
+
+  <h2>أنواع الترميزات الشائعة</h2>
+  <table>
+    <thead><tr><th>الترميز</th><th>الوصف</th><th>متى تجده</th></tr></thead>
+    <tbody>
+      <tr><td><strong>UTF-8</strong></td><td>ترميز عالمي متغيّر الطول، يدعم العربية وكل اللغات، وهو المعيار الحديث للويب.</td><td>معظم الملفات الحديثة ومواقع الويب وتطبيقات الجوال.</td></tr>
+      <tr><td><strong>UTF-8 مع BOM</strong></td><td>نفس UTF-8 مع علامة بداية (BOM) تساعد بعض برامج ويندوز على التعرف عليه.</td><td>ملفات مصدّرة من برامج ويندوز القديمة أو Excel.</td></tr>
+      <tr><td><strong>UTF-16 LE / BE</strong></td><td>بايتان لكل حرف. LE شائع في ويندوز، وBE في بعض الأنظمة.</td><td>ملفات نظام ويندوز وسجلات بعض البرامج.</td></tr>
+      <tr><td><strong>ANSI (Windows-1256)</strong></td><td>ترميز قديم أحادي البايت للعربية، وليس لكل الحروف العربية.</td><td>ملفات عربية قديمة، برامج DOS/ويندوز قديمة.</td></tr>
+      <tr><td><strong>ANSI (Windows-1252)</strong></td><td>ترميز قديم للغات الأوروبية الغربية.</td><td>نصوص لاتينية قديمة.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>لماذا تظهر النصوص مشوّهة؟</h2>
+  <p>الأسباب الشائعة:</p>
+  <ul>
+    <li>ملف محفوظ بترميز ANSI ويُفتح كأنه UTF-8 (أو العكس).</li>
+    <li>نسخ نص من برنامج قديم إلى محرر يخمّن الترميز خطأً.</li>
+    <li>ملف UTF-16 بدون علامة BOM فيفتحه المحرر كترميز آخر.</li>
+    <li>اختلاف صفحة الترميز العربية (1256) بين الأنظمة.</li>
+  </ul>
+
+  <h2>كيف تفتح ملفاً عربياً وتصلحه؟</h2>
+  <ol>
+    <li>افتح <a href="../">المفكرة</a> واضغط «فتح» واختر الملف.</li>
+    <li>يلتقط التطبيق الترميز تلقائياً؛ إن ظهر النص مشوّهاً جرّب تغيير «الترميز» من شريط الحالة إلى <strong>ANSI (Windows-1256)</strong> أو <strong>UTF-16</strong>.</li>
+    <li>بعد ظهور النص بشكل صحيح، اضغط «حفظ باسم» واختر الترميز المناسب — الأفضل عمومًا <strong>UTF-8</strong> لضمان الدعم الكامل.</li>
+    <li>لحفظ نسخة حديثة من ملف قديم: احفظه مرة كـ UTF-8، وسيعمل في كل البرامج والمواقع.</li>
+  </ol>
+
+  <h2>نصائح سريعة</h2>
+  <ul>
+    <li>عند إرسال ملف عربي لشخص آخر، فضّل UTF-8 لتجنب مشاكل العرض.</li>
+    <li>استخدم «UTF-8 مع BOM» فقط إذا كان البرنامج الآخر يحتاج العلامة.</li>
+    <li>احتفظ بنسخة من الملف الأصلي قبل التحويل من ANSI.</li>
+    <li>تحقق من نهايات الأسطر (CRLF/LF) عند نقل الملفات بين ويندوز ولينكس/ماك.</li>
+  </ul>
+
+  <div class="card">
+    <h3>جرّبها الآن</h3>
+    <p>افتح ملفك العربي في المفكرة، اختر الترميز الصحيح، واحفظه بصيغة حديثة — كل ذلك داخل متصفحك دون رفع الملف لأي خادم.</p>
+    <p><a class="cta" href="../">افتح المفكرة</a></p>
+  </div>
+</main>
+<footer>
+  <p>المفكرة — do.com.ly · <a href="../">التطبيق</a> · <a href="../about.html">عن المفكرة</a> · <a href="./online-notepad-arabic.html">دليل المفكرة أونلاين</a></p>
+</footer>
+</body>
+</html>

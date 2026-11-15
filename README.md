@@ -1,8 +1,18 @@
 # المفكرة — نسخة الويب (do.com.ly)
 
+[![Live](https://img.shields.io/badge/live-do.com.ly-1f6feb)](https://do.com.ly/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
+[![PWA](https://img.shields.io/badge/PWA-installable-purple)](https://do.com.ly/)
+[![Cloudflare Pages](https://img.shields.io/badge/deploy-Cloudflare%20Pages-orange)](https://do.com.ly/)
+
+**Arabic-first browser notepad** with real text-encoding support (UTF-8 / UTF-16 / ANSI), full RTL, find & replace, local autosave, and an installable PWA. Free, open source, and serverless: your documents never leave the browser.
+Notepad for Arabic and English — built after reverse-engineering Windows Notepad with REA + Ghidra.
+
 تطبيق مفكرة عربي يعمل على المتصفح (SPA) بلا خادم خلفي، مبني بعد **تحليل أداة `Notepad.exe` في ويندوز** باستخدام **REA + Ghidra** (انظر قسم «من أين جاء التصميم»).
 
-- **الموقع:** <https://do.com.ly/> — النسخة الحالية تعمل على <https://www.do.com.ly/> و<https://d-a7a.pages.dev/>
+![واجهة المفكرة](docs/preview.png)
+
+- **الموقع:** <https://do.com.ly/> — ويعمل أيضاً على <https://www.do.com.ly/> و<https://d-a7a.pages.dev/>
 - نشر تلقائي: كل `git push` إلى فرع `main` يُنشر عبر **Cloudflare Pages**.
 - لا خادم ولا قاعدة بيانات: كل البيانات تبقى في متصفحك (IndexedDB + localStorage). لا تتبّع من طرف التطبيق؛ ملاحظة: إن كان **Cloudflare Web Analytics** مفعّلاً في حسابك فإن Cloudflare يحقن سكربت إحصاءات بلا كوكيز (يمكن تعطيله من لوحة Cloudflare، وسياسة CSP لدينا تسمح به صراحةً فقط لهذا النطاق).
 
@@ -31,11 +41,23 @@ npx serve .
 
 ## الظهور في محركات البحث (SEO)
 
+**التقنيات المطبقة:**
 - بيانات وصفية بلغتين (title/description/keywords)، وروابط `canonical` وOpenGraph وTwitter.
-- بيانات منظمة **JSON-LD** من نوع `WebApplication` تصف الأداة وميزاتها ولغاتها.
-- صفحتا تعريف غنيتان بالمحتوى: `about.html` (عربي) و`about-en.html` (إنجليزي) مع `hreflang`.
-- `sitemap.xml` و`robots.txt` للنطاق `do.com.ly`، وصورة مشاركة اجتماعية `assets/og-image.png`.
-- أيقونات PWA كاملة (192/512/maskable/apple-touch) لتحسين الظهور والتثبيت.
+- بيانات منظمة **JSON-LD**: `WebApplication` للأداة، و`Article` + `FAQPage` للأدلة والتعريف (فرص ظهور مقتطفات الأسئلة في Google).
+- صفحات محتوى تستهدف استعلامات بحث حقيقية:
+  - `guides/arabic-text-encodings.html` — «ترميز النصوص العربية / UTF-8 / ANSI / نصوص مشوهة».
+  - `guides/online-notepad-arabic.html` — «مفكرة أونلاين عربية بدون تحميل».
+  - `about.html` و`about-en.html` مع `hreflang` متبادل.
+- `sitemap.xml` (5 صفحات) و`robots.txt`، وصورة مشاركة اجتماعية `assets/og-image.png`.
+- `llms.txt` لتحسين الفهم في محركات البحث المعتمدة على الذكاء الاصطناعي.
+- `Cache-Control` في `_headers` لأداء أفضل (Core Web Vitals)، وأيقونات PWA كاملة (192/512/maskable/apple-touch).
+
+**تحسين اكتشاف المستودع نفسه (GitHub):**
+- Description وHomepage وTopics (notepad, arabic, rtl, utf-8, pwa, text-editor, cloudflare-pages…).
+- README ثنائي اللغة مع كلمات مفتاحية، Badges، وصورة معاينة (تظهر في نتائج GitHub والبحث).
+- Topics تُعيد ترتيب المستودع في عمليات البحث داخل GitHub وتزيد فرص ظهوره في Google.
+
+**كلمات مفتاحية مستهدفة:** مفكرة أونلاين، محرر نصوص عربي، محرر نصوص على المتصفح، فتح ملف ANSI، ترميز UTF-8 عربي، notepad online، arabic text editor، browser notepad، UTF-16 editor، PWA notepad.
 
 ## التخزين — كيف تُحفظ البيانات؟
 
@@ -46,7 +68,7 @@ npx serve .
 | عنوان المستند + المستند غير المحفوظ (Autosave) | **IndexedDB** (`d-notepad` / `kv` / `autosave`) | يُحفظ تلقائياً أثناء الكتابة ويُعرض شريط «استعادة» عند إعادة الفتح |
 | الإعدادات (الترميز، نهاية السطر، الخط، المظهر، الاتجاه) | **localStorage** (`d-notepad:settings`) | صغيرة وثابتة |
 | الملفات النهائية | جهاز المستخدم عبر **File System Access API** أو تنزيل عادي | لا تبقى نسخة إضافية في الموقع |
-| أصول التطبيق (للعمل دون اتصال) | **Cache API** عبر Service Worker | `d-notepad-v4` |
+| أصول التطبيق (للعمل دون اتصال) | **Cache API** عبر Service Worker | `d-notepad-v5` |
 
 **ماذا عن قواعد البيانات لاحقاً؟** ممكن بعدة مستويات:
 1. **مكتبة مستندات متعددة** داخل IndexedDB (قائمة عنوان + محتوى)، مع بحث محلي — أسهل خطوة تالية.
@@ -82,6 +104,11 @@ npm test
 index.html              الواجهة العربية RTL (مع تبديل اللغة)
 about.html              صفحة تعريف عربية (SEO)
 about-en.html           صفحة تعريف إنجليزية (SEO)
+guides/                 أدلة محتوى لتحسين البحث:
+  arabic-text-encodings.html   دليل الترميزات العربية
+  online-notepad-arabic.html   دليل المفكرة أونلاين
+docs/preview.png        صورة معاينة للمستودع
+llms.txt                تعريف الموقع لمحركات البحث الذكية
 assets/style.css        التصميم (داكن/مضيء، طباعة، جوال)
 assets/about.css        تنسيق صفحات التعريف
 assets/codec.js         الترميزات ونهايات الأسطر (منطق نقي مختبَر)

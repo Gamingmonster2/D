@@ -28,6 +28,19 @@
   "isPartOf": { "@type": "WebSite", "name": "المفكرة", "url": "https://do.com.ly/" }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "هل المفكرة مجانية بالكامل؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم، مجانية ومفتوحة المصدر بترخيص MIT، بلا إعلانات أو اشتراكات." } },
+    { "@type": "Question", "name": "هل أحتاج إلى إنترنت لاستخدامها؟", "acceptedAnswer": { "@type": "Answer", "text": "لا بعد أول زيارة؛ يعمل التطبيق دون اتصال بفضل تقنية Service Worker." } },
+    { "@type": "Question", "name": "هل يمكن فتح ملفات كبيرة؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم ضمن حدود ذاكرة المتصفح؛ الملفات الضخمة جداً قد تحتاج تقسيمها." } },
+    { "@type": "Question", "name": "هل يُحفظ العمل تلقائياً؟", "acceptedAnswer": { "@type": "Answer", "text": "نعم، يُحفظ المستند الجاري محلياً ويُعرض شريط استعادة عند إعادة فتح الموقع." } },
+    { "@type": "Question", "name": "لماذا لا يمكن حفظ ملف مباشرة في بعض المتصفحات؟", "acceptedAnswer": { "@type": "Answer", "text": "ميزة الكتابة إلى الملفات متاحة في Chrome وEdge؛ في غيرها يُنزَّل الملف بدلاً من الكتابة المباشرة." } }
+  ]
+}
+</script>
 </head>
 <body>
 <header class="site-header">
@@ -102,6 +115,12 @@
     <dt>لماذا لا يمكن حفظ ملف مباشرة في بعض المتصفحات؟</dt>
     <dd>ميزة الكتابة إلى الملفات (File System Access API) متاحة في Chrome وEdge؛ في غيرها يُنزَّل الملف بدلاً من الكتابة المباشرة.</dd>
   </dl>
+
+  <h2>أدلة مفيدة</h2>
+  <ul>
+    <li><a href="./guides/arabic-text-encodings.html">ترميزات النصوص العربية: UTF-8 وANSI وUTF-16 — دليل مبسّط</a></li>
+    <li><a href="./guides/online-notepad-arabic.html">مفكرة أونلاين عربية بدون تحميل — كيف تكتب وتحفظ ملاحظاتك بأمان</a></li>
+  </ul>
 
   <div class="card">
     <h3>ابدأ الآن</h3>

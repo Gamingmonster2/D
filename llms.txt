@@ -1,0 +1,18 @@
+# المفكرة — do.com.ly
+
+> Free browser-based notepad for Arabic and English text: UTF-8 / UTF-16 / ANSI
+> encodings, RTL support, find & replace, local autosave, installable PWA.
+> Built after reverse-engineering Windows Notepad with REA + Ghidra.
+
+## Pages
+- [التطبيق — المفكرة](https://do.com.ly/): محرر نصوص عربي على المتصفح (فتح/حفظ، ترميزات، بحث، حفظ تلقائي).
+- [عن المفكرة](https://do.com.ly/about.html): تعريف الأداة وميزاتها والأسئلة الشائعة.
+- [About Notepad](https://do.com.ly/about-en.html): English overview and FAQ.
+- [ترميزات النصوص العربية](https://do.com.ly/guides/arabic-text-encodings.html): دليل UTF-8 وANSI وUTF-16 ومشاكل النصوص المشوّهة.
+- [مفكرة أونلاين عربية](https://do.com.ly/guides/online-notepad-arabic.html): كيف تكتب وتحفظ ملاحظاتك بأمان على المتصفح.
+
+## Facts
+- No account, no server, no ads; documents never leave the browser.
+- Open source (MIT): https://github.com/Gamingmonster2/D
+- Languages: Arabic (RTL) and English (LTR).
+- Works offline after the first visit; installable on mobile and desktop.

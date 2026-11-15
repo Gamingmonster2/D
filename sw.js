@@ -1,12 +1,15 @@
 /*
  * sw.js — تشغيل التطبيق دون اتصال (PWA) عبر تخزين الملفات الأساسية.
  */
-const CACHE_NAME = 'd-notepad-v4';
+const CACHE_NAME = 'd-notepad-v5';
 const ASSETS = [
   './',
   './index.html',
   './about.html',
   './about-en.html',
+  './guides/arabic-text-encodings.html',
+  './guides/online-notepad-arabic.html',
+  './llms.txt',
   './assets/style.css',
   './assets/about.css',
   './assets/app.js',
