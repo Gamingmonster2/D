@@ -1,7 +1,7 @@
 /*
  * sw.js — تشغيل التطبيق دون اتصال (PWA) عبر تخزين الملفات الأساسية.
  */
-const CACHE_NAME = 'd-notepad-v2';
+const CACHE_NAME = 'd-notepad-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -10,6 +10,8 @@ const ASSETS = [
   './assets/codec.js',
   './assets/icon.svg',
   './manifest.webmanifest',
+  './robots.txt',
+  './sitemap.xml',
 ];
 
 self.addEventListener('install', (event) => {

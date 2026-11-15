@@ -1,7 +1,8 @@
-# المفكرة — نسخة الويب (D)
+# المفكرة — نسخة الويب (do.com.ly)
 
 تطبيق مفكرة عربي يعمل على المتصفح (SPA) بلا خادم خلفي، مبني بعد **تحليل أداة `Notepad.exe` في ويندوز** باستخدام **REA + Ghidra** (انظر قسم «من أين جاء التصميم»).
 
+- **الموقع:** <https://do.com.ly/> — نسخة النشر المؤقتة: <https://d-a7a.pages.dev/>
 - نشر تلقائي: كل `git push` إلى فرع `main` يُنشر عبر **Cloudflare Pages**.
 - لا خادم ولا قاعدة بيانات: كل البيانات تبقى في متصفحك (IndexedDB + localStorage).
 
@@ -19,7 +20,7 @@
 ## التشغيل محلياً
 
 ```bash
-# أي خادم ساكنسواء، مثال:
+# أي خادم ساكن، مثال:
 npx serve .
 # أو فتح index.html مباشرة (تفقد ميزات مثل اختيار ملفات النظام وPWA على file://)
 ```
@@ -35,7 +36,7 @@ npx serve .
 | عنوان المستند + المستند غير المحفوظ (Autosave) | **IndexedDB** (`d-notepad` / `kv` / `autosave`) | يُحفظ تلقائياً أثناء الكتابة ويُعرض شريط «استعادة» عند إعادة الفتح |
 | الإعدادات (الترميز، نهاية السطر، الخط، المظهر، الاتجاه) | **localStorage** (`d-notepad:settings`) | صغيرة وثابتة |
 | الملفات النهائية | جهاز المستخدم عبر **File System Access API** أو تنزيل عادي | لا تبقى نسخة إضافية في الموقع |
-| أصول التطبيق (للعمل دون اتصال) | **Cache API** عبر Service Worker | `d-notepad-v2` |
+| أصول التطبيق (للعمل دون اتصال) | **Cache API** عبر Service Worker | `d-notepad-v3` |
 
 **ماذا عن قواعد البيانات لاحقاً؟** ممكن بعدة مستويات:
 1. **مكتبة مستندات متعددة** داخل IndexedDB (قائمة عنوان + محتوى)، مع بحث محلي — أسهل خطوة تالية.
@@ -52,18 +53,18 @@ npm test
 
 ## النشر على Cloudflare Pages
 
-1. افتح [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
-2. اختر مستودع GitHub: **`Gamingmonster2/D`** (اضغط Authorize / Install إذا لزم).
-3. الإعدادات:
-   - **Project name:** `d` (سيكون الرابط المؤقت `https://d.pages.dev`).
-   - **Production branch:** `main`.
-   - **Framework preset:** `None`.
-   - **Build command:** اتركه **فارغاً**.
-   - **Build output directory:** اتركه فارغاً (الملفات في جذر المستودع).
-4. اضغط **Save and Deploy** — سيُنشر تلقائياً عند كل `git push` إلى `main`.
-5. ربط الدومين: **Custom domains** → **Set up a custom domain** → أضف الدومين (مثال يبدأ بحرف D)، ثم أضف سجل CNAME المطلوب في مزود الدومين وانتظر التحقق.
+المشروع منشور مسبقاً على Cloudflare Pages باسم **`d-a7a`** (الرابط المؤقت: <https://d-a7a.pages.dev/>)، ومربوط بمستودع GitHub **`Gamingmonster2/D`**؛ أي `git push` إلى `main` يُنشر تلقائياً.
 
-> ملف `_headers` يضيف سياسات أمان (CSP، nosniff، referrer-policy…) عبر Cloudflare Pages.
+**ربط دومين `do.com.ly`:**
+
+1. Cloudflare Dashboard → **Workers & Pages** → المشروع **`d-a7a`** → **Custom domains**.
+2. **Set up a custom domain** → أدخل `do.com.ly` ثم (اختيارياً) `www.do.com.ly`.
+3. الدومين `do.com.ly` **مضاف بالفعل إلى Cloudflare** (لا حاجة لتغيير Nameservers)؛ سيضيف Cloudflare سجلات CNAME تلقائياً نحو المشروع ويصدر شهادة SSL مجاناً.
+4. انتظر حالة الدومين = **Active** (دقائق)، ثم اختبر <https://do.com.ly/>.
+5. (اختياري) توحيد الاتجاه: Cloudflare → **Rules → Redirect Rules**: `www.do.com.ly/*` → `https://do.com.ly/$1` (301).
+6. **تنبيهات:** لا تحذف سجلات البريد (MX/TXT/SPF/DKIM) إن وُجدت، والموقع القديم (PDF) بدومينه السابق يبقى كما هو دون تغيير.
+
+> ملف `_headers` يضيف سياسات أمان (CSP، nosniff، referrer-policy…) عبر Cloudflare Pages. وملفا `robots.txt` و`sitemap.xml` يشيران إلى `https://do.com.ly/`.
 
 ## بنية المشروع
 
@@ -74,6 +75,8 @@ assets/codec.js         الترميزات ونهايات الأسطر (منطق
 assets/app.js           منطق التطبيق (ملفات، بحث، حفظ تلقائي، اختصارات)
 sw.js                   Service Worker للعمل دون اتصال
 manifest.webmanifest    بيانات PWA
+robots.txt              قواعد فهرسة البحث
+sitemap.xml             خريطة الموقع (https://do.com.ly/)
 tests/codec.test.mjs    اختبارات Node للترميزات
 _headers                سياسات أمان Cloudflare Pages
 ```
