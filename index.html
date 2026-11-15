@@ -15,7 +15,7 @@
   <header class="appbar">
     <div class="title-area">
       <span class="logo" aria-hidden="true">📝</span>
-      <h1 id="docTitle">المفكرة</h1>
+      <h1 id="docTitle" class="doc-title" role="button" tabindex="0" title="إعادة تسمية المستند (F2)"><span id="docTitleText">المفكرة</span><span class="rename-icon" aria-hidden="true">✏️</span></h1>
       <span id="dirtyBadge" class="badge" hidden>غير محفوظ</span>
     </div>
     <nav class="toolbar" aria-label="شريط الأدوات">
@@ -24,6 +24,7 @@
         <button type="button" data-action="open" title="فتح (Ctrl+O)">فتح</button>
         <button type="button" data-action="save" title="حفظ (Ctrl+S)">حفظ</button>
         <button type="button" data-action="saveAs" title="حفظ باسم (Ctrl+Shift+S)">حفظ باسم</button>
+        <button type="button" data-action="rename" title="إعادة تسمية المستند (F2)">تسمية</button>
       </div>
       <div class="group">
         <button type="button" data-action="undo" title="تراجع (Ctrl+Z)">تراجع</button>
@@ -78,7 +79,7 @@
   </main>
 
   <footer class="statusbar">
-    <span id="docName" class="doc-name">بدون عنوان</span>
+    <span id="docName" class="doc-name" role="button" tabindex="0" title="إعادة تسمية (F2)">بدون عنوان</span>
     <span id="posInfo">سطر 1، عمود 1</span>
     <span id="selInfo"></span>
     <span id="counts">0 حرف</span>
@@ -141,6 +142,19 @@
     </ul>
     <div class="dialog-actions">
       <button type="submit" class="primary">إغلاق</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="renameDialog">
+  <form method="dialog" class="dialog-form">
+    <h2>عنوان المستند</h2>
+    <label>العنوان
+      <input id="renameInput" type="text" maxlength="120" placeholder="مثال: ملاحظاتي">
+    </label>
+    <div class="dialog-actions">
+      <button type="submit" class="primary" id="renameApply">تطبيق</button>
+      <button type="button" id="renameCancel">إلغاء</button>
     </div>
   </form>
 </dialog>

@@ -62,6 +62,11 @@ const els = {
   gotoApply: document.getElementById('gotoApply'),
   gotoCancel: document.getElementById('gotoCancel'),
   aboutDialog: document.getElementById('aboutDialog'),
+  docTitleText: document.getElementById('docTitleText'),
+  renameDialog: document.getElementById('renameDialog'),
+  renameInput: document.getElementById('renameInput'),
+  renameApply: document.getElementById('renameApply'),
+  renameCancel: document.getElementById('renameCancel'),
 };
 
 const state = {
@@ -154,7 +159,7 @@ function setSaveState(text) {
 
 function updateTitle() {
   const title = state.name || 'بدون عنوان';
-  els.docTitle.textContent = title;
+  els.docTitleText.textContent = title;
   els.docName.textContent = title;
   document.title = (state.dirty ? '• ' : '') + title + ' — المفكرة';
 }
@@ -219,7 +224,8 @@ async function clearAutosave() {
 
 async function initRestore() {
   const draft = await kvGet('autosave');
-  if (draft && typeof draft.text === 'string' && draft.text.length > 0) {
+  const hasCustomTitle = draft && draft.name && draft.name !== 'بدون عنوان';
+  if (draft && typeof draft.text === 'string' && (draft.text.length > 0 || hasCustomTitle)) {
     state.restoreDraft = draft;
     const when = draft.ts ? new Date(draft.ts).toLocaleString('ar') : 'سابقاً';
     els.restoreInfo.textContent = `يوجد مستند غير محفوظ «${draft.name || 'بدون عنوان'}» من ${when}.`;
@@ -408,6 +414,25 @@ async function newDocument() {
   updateStatusBar();
   await clearAutosave();
   setSaveState('جاهز');
+  els.editor.focus();
+}
+
+/* ------------------------------ عنوان المستند ------------------------------ */
+
+function openRename() {
+  els.renameInput.value = state.name && state.name !== 'بدون عنوان' ? state.name : '';
+  els.renameDialog.showModal();
+  els.renameInput.focus();
+  els.renameInput.select();
+}
+
+function applyRename() {
+  const title = (els.renameInput.value || '').trim();
+  state.name = title || 'بدون عنوان';
+  updateTitle();
+  markDirty();
+  setSaveState('تم تغيير العنوان');
+  els.renameDialog.close();
   els.editor.focus();
 }
 
@@ -756,6 +781,7 @@ function handleAction(action) {
     case 'open': openDocument(); break;
     case 'save': saveDocument(); break;
     case 'saveAs': saveDocumentAs(); break;
+    case 'rename': openRename(); break;
     case 'undo': els.editor.focus(); document.execCommand('undo'); break;
     case 'redo': els.editor.focus(); document.execCommand('redo'); break;
     case 'find': openFind(false); break;
@@ -816,6 +842,30 @@ function bindEvents() {
 
   els.fileInput.addEventListener('change', openFromInput);
 
+  els.docTitle.addEventListener('click', openRename);
+  els.docTitle.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openRename();
+    }
+  });
+  els.docName.addEventListener('click', openRename);
+  els.docName.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openRename();
+    }
+  });
+  els.renameApply.addEventListener('click', (event) => {
+    event.preventDefault();
+    applyRename();
+  });
+  els.renameDialog.querySelector('form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    applyRename();
+  });
+  els.renameCancel.addEventListener('click', () => els.renameDialog.close());
+
   els.fontApply.addEventListener('click', (event) => {
     event.preventDefault();
     applyFont();
@@ -852,6 +902,11 @@ function bindEvents() {
       if (key === '=' || key === '+') { event.preventDefault(); changeFontSize(1); return; }
       if (key === '-') { event.preventDefault(); changeFontSize(-1); return; }
       if (key === '0') { event.preventDefault(); changeFontSize(0); return; }
+    }
+    if (event.key === 'F2') {
+      event.preventDefault();
+      openRename();
+      return;
     }
     if (event.key === 'F3') {
       event.preventDefault();
