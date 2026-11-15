@@ -1,14 +1,22 @@
 /*
  * sw.js — تشغيل التطبيق دون اتصال (PWA) عبر تخزين الملفات الأساسية.
  */
-const CACHE_NAME = 'd-notepad-v3';
+const CACHE_NAME = 'd-notepad-v4';
 const ASSETS = [
   './',
   './index.html',
+  './about.html',
+  './about-en.html',
   './assets/style.css',
+  './assets/about.css',
   './assets/app.js',
   './assets/codec.js',
+  './assets/i18n.js',
   './assets/icon.svg',
+  './assets/icon-192.png',
+  './assets/icon-512.png',
+  './assets/icon-512-maskable.png',
+  './assets/apple-touch-icon.png',
   './manifest.webmanifest',
   './robots.txt',
   './sitemap.xml',

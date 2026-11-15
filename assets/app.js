@@ -4,6 +4,7 @@
  * فتح/حفظ بترميزات UTF-8/UTF-16/ANSI، كشف تلقائي، نهايات أسطر، .LOG،
  * بحث/استبدال، إعدادات، وحفظ تلقائي محلي.
  */
+import { t, translateDocument } from './i18n.js';
 import {
   ENCODINGS,
   EOLS,
@@ -26,6 +27,7 @@ const DEFAULT_SETTINGS = {
   fontFamily: 'Segoe UI',
   fontSize: 16,
   editorDir: 'auto',
+  lang: '',
 };
 
 const els = {
@@ -63,6 +65,8 @@ const els = {
   gotoCancel: document.getElementById('gotoCancel'),
   aboutDialog: document.getElementById('aboutDialog'),
   docTitleText: document.getElementById('docTitleText'),
+  langBtn: document.getElementById('langBtn'),
+  installBtn: document.getElementById('installBtn'),
   renameDialog: document.getElementById('renameDialog'),
   renameInput: document.getElementById('renameInput'),
   renameApply: document.getElementById('renameApply'),
@@ -71,7 +75,7 @@ const els = {
 
 const state = {
   handle: null,
-  name: 'بدون عنوان',
+  name: '',
   dirty: false,
   encoding: 'utf-8',
   eol: 'crlf',
@@ -80,8 +84,26 @@ const state = {
 };
 
 let settings = loadSettings();
+if (settings.lang !== 'ar' && settings.lang !== 'en') settings.lang = detectInitialLang();
+
+const isEn = () => settings.lang === 'en';
+const T = (key, vars) => t(settings.lang, key, vars);
+const untitledName = () => T('untitled');
+const isUntitled = (name) => !name || name === 'بدون عنوان' || name === 'Untitled' || name === untitledName();
+const locale = () => (isEn() ? 'en-US' : 'ar');
+
+function detectInitialLang() {
+  try {
+    const nav = navigator.language || (navigator.languages && navigator.languages[0]) || 'ar';
+    return String(nav).toLowerCase().startsWith('ar') ? 'ar' : 'en';
+  } catch {
+    return 'ar';
+  }
+}
+
 let autosaveTimer = null;
 let dbPromise = null;
+let deferredInstall = null;
 
 /* ------------------------------ التخزين ------------------------------ */
 
@@ -158,10 +180,10 @@ function setSaveState(text) {
 }
 
 function updateTitle() {
-  const title = state.name || 'بدون عنوان';
+  const title = isUntitled(state.name) ? untitledName() : state.name;
   els.docTitleText.textContent = title;
   els.docName.textContent = title;
-  document.title = (state.dirty ? '• ' : '') + title + ' — المفكرة';
+  document.title = (state.dirty ? '• ' : '') + title + ' — ' + T('appName');
 }
 
 function markDirty() {
@@ -186,11 +208,11 @@ function updateStatusBar() {
   const before = value.slice(0, start);
   const line = before.split('\n').length;
   const column = start - before.lastIndexOf('\n');
-  els.posInfo.textContent = `سطر ${line}، عمود ${column}`;
-  els.selInfo.textContent = start !== end ? `تحديد: ${end - start}` : '';
+  els.posInfo.textContent = T('lineCol', { line, col: column });
+  els.selInfo.textContent = start !== end ? T('selection', { n: end - start }) : '';
   const lines = countLines(value);
-  els.counts.textContent = `${value.length} حرف · ${lines} سطر`;
-  if (start !== end) els.counts.textContent += ` · تحديد ${end - start}`;
+  els.counts.textContent = T('counts', { chars: value.length, lines });
+  if (start !== end) els.counts.textContent += ` · ${T('selection', { n: end - start })}`;
 }
 
 /* ------------------------------ الحفظ التلقائي ------------------------------ */
@@ -211,9 +233,9 @@ async function flushAutosave() {
       editorDir: state.editorDir,
       ts: Date.now(),
     });
-    setSaveState(`حفظ تلقائي ${new Date().toLocaleTimeString('ar')}`);
+    setSaveState(T('autosaved', { time: new Date().toLocaleTimeString(locale()) }));
   } catch {
-    setSaveState('تعذّر الحفظ التلقائي');
+    setSaveState(T('autosaveFailed'));
   }
 }
 
@@ -224,20 +246,30 @@ async function clearAutosave() {
 
 async function initRestore() {
   const draft = await kvGet('autosave');
-  const hasCustomTitle = draft && draft.name && draft.name !== 'بدون عنوان';
+  const hasCustomTitle = draft && !isUntitled(draft.name);
   if (draft && typeof draft.text === 'string' && (draft.text.length > 0 || hasCustomTitle)) {
     state.restoreDraft = draft;
-    const when = draft.ts ? new Date(draft.ts).toLocaleString('ar') : 'سابقاً';
-    els.restoreInfo.textContent = `يوجد مستند غير محفوظ «${draft.name || 'بدون عنوان'}» من ${when}.`;
-    els.restoreBanner.hidden = false;
+    renderRestoreBanner();
   }
+}
+
+function renderRestoreBanner() {
+  const draft = state.restoreDraft;
+  if (!draft) {
+    els.restoreBanner.hidden = true;
+    return;
+  }
+  const when = draft.ts ? new Date(draft.ts).toLocaleString(locale()) : isEn() ? 'earlier' : 'سابقاً';
+  const name = isUntitled(draft.name) ? untitledName() : draft.name;
+  els.restoreInfo.textContent = T('restoreMessage', { name, when });
+  els.restoreBanner.hidden = false;
 }
 
 async function restoreDraft() {
   const draft = state.restoreDraft;
   if (!draft) return;
   els.editor.value = draft.text;
-  state.name = draft.name || 'بدون عنوان';
+  state.name = draft.name || untitledName();
   state.encoding = ENCODINGS.some((e) => e.id === draft.encoding) ? draft.encoding : settings.encoding;
   state.eol = EOLS.some((e) => e.id === draft.eol) ? draft.eol : settings.eol;
   state.editorDir = draft.editorDir || 'auto';
@@ -249,7 +281,7 @@ async function restoreDraft() {
   els.dirtyBadge.hidden = false;
   updateTitle();
   updateStatusBar();
-  setSaveState('جاهز — مستند مستعاد');
+  setSaveState(T('restoredNotice'));
   els.editor.focus();
 }
 
@@ -257,14 +289,14 @@ async function discardDraft() {
   state.restoreDraft = null;
   els.restoreBanner.hidden = true;
   await clearAutosave();
-  setSaveState('جاهز');
+  setSaveState(T('readyNotice'));
 }
 
 /* ------------------------------ الملفات ------------------------------ */
 
 async function confirmDiscard() {
   if (!state.dirty) return true;
-  return window.confirm('يوجد تعديلات غير محفوظة. هل تريد المتابعة بدون حفظ؟');
+  return window.confirm(T('confirmDiscard'));
 }
 
 function bytesForSave() {
@@ -278,7 +310,7 @@ function applyLoadedText(rawText, name, handle) {
   const eol = detectEOL(raw);
   const text = toLF(raw);
   state.handle = handle || null;
-  state.name = name || 'مستند.txt';
+  state.name = name || T('document');
   state.encoding = detected.encoding;
   state.eol = eol;
   els.editor.value = text;
@@ -286,13 +318,13 @@ function applyLoadedText(rawText, name, handle) {
   clearDirty();
   applyLogFeature();
   updateStatusBar();
-  setSaveState(`تم الفتح — ${encodingLabel(state.encoding)}`);
+  setSaveState(T('openedWith', { encoding: encodingLabel(state.encoding) }));
 }
 
 function applyLogFeature() {
   const firstLine = els.editor.value.split('\n')[0].trim();
   if (firstLine.toUpperCase() !== '.LOG') return;
-  const stamp = new Intl.DateTimeFormat('ar', { dateStyle: 'short', timeStyle: 'short' }).format(new Date());
+  const stamp = new Intl.DateTimeFormat(locale(), { dateStyle: 'short', timeStyle: 'short' }).format(new Date());
   const value = els.editor.value;
   const sep = value.endsWith('\n') || value.length === 0 ? '' : '\n';
   els.editor.value = value + sep + stamp + '\n';
@@ -351,8 +383,8 @@ async function saveDocument() {
       return;
     } catch (cause) {
       if (cause && cause.name === 'AbortError') return;
-      setSaveState('تعذّر الحفظ');
-      window.alert(`تعذّر الحفظ: ${cause && cause.message ? cause.message : cause}`);
+      setSaveState(T('saveFailed'));
+      window.alert(T('saveFailedAlert', { message: cause && cause.message ? cause.message : cause }));
       return;
     }
   }
@@ -360,7 +392,7 @@ async function saveDocument() {
 }
 
 async function saveDocumentAs() {
-  const suggested = state.name && state.name !== 'بدون عنوان' ? state.name : 'مستند.txt';
+  const suggested = isUntitled(state.name) ? T('document') : state.name;
   if (typeof window.showSaveFilePicker === 'function') {
     try {
       const handle = await window.showSaveFilePicker({
@@ -385,7 +417,7 @@ function downloadFallback() {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
-  anchor.download = state.name && state.name !== 'بدون عنوان' ? state.name : 'مستند.txt';
+  anchor.download = isUntitled(state.name) ? T('document') : state.name;
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
@@ -399,28 +431,28 @@ async function afterSave(name, handle) {
   clearDirty();
   updateStatusBar();
   await clearAutosave();
-  setSaveState('تم الحفظ');
+  setSaveState(T('savedOk'));
 }
 
 async function newDocument() {
   if (!(await confirmDiscard())) return;
   els.editor.value = '';
   state.handle = null;
-  state.name = 'بدون عنوان';
+  state.name = untitledName();
   state.encoding = settings.encoding;
   state.eol = settings.eol;
   syncSelects();
   clearDirty();
   updateStatusBar();
   await clearAutosave();
-  setSaveState('جاهز');
+  setSaveState(T('readyNotice'));
   els.editor.focus();
 }
 
 /* ------------------------------ عنوان المستند ------------------------------ */
 
 function openRename() {
-  els.renameInput.value = state.name && state.name !== 'بدون عنوان' ? state.name : '';
+  els.renameInput.value = isUntitled(state.name) ? '' : state.name;
   els.renameDialog.showModal();
   els.renameInput.focus();
   els.renameInput.select();
@@ -428,10 +460,10 @@ function openRename() {
 
 function applyRename() {
   const title = (els.renameInput.value || '').trim();
-  state.name = title || 'بدون عنوان';
+  state.name = title || untitledName();
   updateTitle();
   markDirty();
-  setSaveState('تم تغيير العنوان');
+  setSaveState(T('titleChanged'));
   els.renameDialog.close();
   els.editor.focus();
 }
@@ -465,7 +497,7 @@ function onEncodingChange() {
   settings.encoding = state.encoding;
   saveSettings();
   markDirty();
-  setSaveState(`سيُحفظ بـ ${encodingLabel(state.encoding)}`);
+  setSaveState(T('willSaveEncoding', { encoding: encodingLabel(state.encoding) }));
 }
 
 function onEolChange() {
@@ -473,7 +505,7 @@ function onEolChange() {
   settings.eol = state.eol;
   saveSettings();
   markDirty();
-  setSaveState(`سيُحفظ بنهاية سطر ${state.eol.toUpperCase()}`);
+  setSaveState(T('willSaveEol', { eol: state.eol.toUpperCase() }));
 }
 
 /* ------------------------------ البحث والاستبدال ------------------------------ */
@@ -505,7 +537,7 @@ function buildFindSpec() {
       compiled = new RegExp(query, matchCase ? 'g' : 'gi');
     } catch {
       els.findInput.classList.add('invalid');
-      els.findCount.textContent = 'نمط غير صالح';
+      els.findCount.textContent = T('invalidPattern');
       return null;
     }
   }
@@ -539,7 +571,7 @@ function collectMatches(spec, value) {
 function refreshFindCount() {
   const spec = buildFindSpec();
   const matches = collectMatches(spec, els.editor.value);
-  els.findCount.textContent = spec ? (matches.length ? `${matches.length} نتيجة` : 'لا نتائج') : '';
+  els.findCount.textContent = spec ? (matches.length ? T('resultsCount', { n: matches.length }) : T('noResults')) : '';
 }
 
 function findNext(direction) {
@@ -548,7 +580,7 @@ function findNext(direction) {
   const value = els.editor.value;
   const matches = collectMatches(spec, value);
   if (!matches.length) {
-    els.findCount.textContent = 'لا نتائج';
+    els.findCount.textContent = T('noResults');
     return;
   }
   const wrap = els.wrapSearch.checked;
@@ -566,14 +598,14 @@ function findNext(direction) {
     if (!target && wrap) target = matches[matches.length - 1];
   }
   if (!target) {
-    els.findCount.textContent = direction >= 0 ? 'نهاية المستند' : 'بداية المستند';
+    els.findCount.textContent = direction >= 0 ? T('endOfDocument') : T('startOfDocument');
     return;
   }
   els.editor.focus();
   els.editor.setSelectionRange(target.start, target.end);
   updateStatusBar();
   const index = matches.findIndex((m) => m.start === target.start);
-  els.findCount.textContent = `${index + 1} من ${matches.length}`;
+  els.findCount.textContent = T('matchPosition', { i: index + 1, n: matches.length });
 }
 
 function replaceCurrent() {
@@ -617,7 +649,7 @@ function replaceAll() {
   if (spec.regex) {
     const re = new RegExp(spec.compiled.source, spec.compiled.flags.includes('i') ? 'gi' : 'g');
     if (re.test('')) {
-      els.findCount.textContent = 'نمط فارغ غير مدعوم';
+      els.findCount.textContent = T('emptyPattern');
       return;
     }
     next = value.replace(re, els.replaceInput.value);
@@ -625,7 +657,7 @@ function replaceAll() {
     next = value.split(spec.query).join(els.replaceInput.value);
   }
   if (next === value) {
-    els.findCount.textContent = 'لا نتائج';
+    els.findCount.textContent = T('noResults');
     return;
   }
   const position = els.editor.selectionStart;
@@ -639,7 +671,7 @@ function replaceAll() {
 /* ------------------------------ إدراج التاريخ والانتقال ------------------------------ */
 
 function insertDateTime() {
-  const stamp = new Intl.DateTimeFormat('ar', { dateStyle: 'short', timeStyle: 'short' }).format(new Date());
+  const stamp = new Intl.DateTimeFormat(locale(), { dateStyle: 'short', timeStyle: 'short' }).format(new Date());
   insertText(stamp);
 }
 
@@ -695,14 +727,14 @@ function applyTheme(theme) {
     effective = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
   document.documentElement.dataset.theme = effective;
-  els.themeBtn.textContent = effective === 'dark' ? 'مضيء' : 'داكن';
+  els.themeBtn.textContent = effective === 'dark' ? T('themeLight') : T('themeDark');
   saveSettings();
 }
 
 function applyEditorDir() {
   const dir = state.editorDir;
   els.editor.dir = dir === 'rtl' ? 'rtl' : dir === 'ltr' ? 'ltr' : 'auto';
-  els.dirBtn.textContent = dir === 'rtl' ? 'الاتجاه: RTL' : dir === 'ltr' ? 'الاتجاه: LTR' : 'الاتجاه: تلقائي';
+  els.dirBtn.textContent = dir === 'rtl' ? T('dirRtl') : dir === 'ltr' ? T('dirLtr') : T('dirAuto');
 }
 
 function toggleTheme() {
@@ -793,6 +825,8 @@ function handleAction(action) {
     case 'theme': toggleTheme(); break;
     case 'print': printDocument(); break;
     case 'about': els.aboutDialog.showModal(); break;
+    case 'install': installApp(); break;
+    case 'lang': applyLanguage(true); break;
     default: break;
   }
 }
@@ -952,18 +986,75 @@ function bindEvents() {
   });
 }
 
+/* ------------------------------ اللغة والتثبيت ------------------------------ */
+
+function applyLanguage(toggle) {
+  if (toggle) settings.lang = settings.lang === 'ar' ? 'en' : 'ar';
+  saveSettings();
+  translateDocument(settings.lang);
+  els.langBtn.textContent = T('language');
+  if (isUntitled(state.name)) state.name = untitledName();
+  applyEditorDir();
+  applyTheme(settings.theme);
+  updateTitle();
+  updateStatusBar();
+  if (state.restoreDraft) renderRestoreBanner();
+  if (!els.findBar.hidden) refreshFindCount();
+  setSaveState(T('readyNotice'));
+}
+
+function isStandaloneMode() {
+  return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+}
+
+function setupInstall() {
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredInstall = event;
+    if (!isStandaloneMode()) els.installBtn.hidden = false;
+  });
+  window.addEventListener('appinstalled', () => {
+    deferredInstall = null;
+    els.installBtn.hidden = true;
+  });
+  if (isStandaloneMode()) {
+    els.installBtn.hidden = true;
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+    els.installBtn.hidden = false;
+  }
+}
+
+async function installApp() {
+  if (deferredInstall) {
+    deferredInstall.prompt();
+    try {
+      await deferredInstall.userChoice;
+    } catch {
+      /* تجاهل */
+    }
+    deferredInstall = null;
+    els.installBtn.hidden = true;
+    return;
+  }
+  window.alert(`${T('installUnavailable')}\n\n${T('aboutInstall')}`);
+}
+
 /* ------------------------------ التهيئة ------------------------------ */
 
 function init() {
   populateSelects();
+  state.name = untitledName();
   state.encoding = ENCODINGS.some((e) => e.id === settings.encoding) ? settings.encoding : DEFAULT_SETTINGS.encoding;
   state.eol = EOLS.some((e) => e.id === settings.eol) ? settings.eol : DEFAULT_SETTINGS.eol;
   syncSelects();
+  translateDocument(settings.lang);
+  els.langBtn.textContent = T('language');
   applySettingsToUi();
   bindEvents();
+  setupInstall();
   updateTitle();
   updateStatusBar();
-  setSaveState('جاهز');
+  setSaveState(T('readyNotice'));
   els.editor.focus();
   initRestore();
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {

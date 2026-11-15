@@ -167,11 +167,36 @@ code { background: var(--bg); border: 1px solid var(--line); border-radius: .3re
   }
 }
 
+/* ---------- About / install hints ---------- */
+.about-links { margin: .4rem 0 0; font-size: .86rem; color: var(--muted); }
+.about-links a { color: var(--accent); }
+.install-hint { font-size: .8rem; color: var(--muted); margin: .3rem 0 0; line-height: 1.7; }
+dialog .features li { margin: .15rem 0; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
-  .appbar { padding: .4rem .5rem; }
-  .toolbar button { padding: .3rem .42rem; font-size: .76rem; }
-  .title-area h1 { max-width: 45vw; }
-  .statusbar { gap: .2rem .7rem; }
-  #editor { padding: .75rem; font-size: 15px; }
+  .appbar { padding: .4rem .5rem; row-gap: .3rem; }
+  .title-area { width: 100%; }
+  .title-area h1 { max-width: 72vw; }
+  .toolbar {
+    flex-wrap: nowrap; overflow-x: auto; width: 100%;
+    padding-bottom: .2rem; -webkit-overflow-scrolling: touch; scrollbar-width: thin;
+  }
+  .toolbar .group { flex: 0 0 auto; }
+  .toolbar button { padding: .4rem .5rem; font-size: .78rem; }
+  .statusbar { gap: .2rem .6rem; font-size: .72rem; padding: .25rem .5rem; }
+  .statusbar .field { gap: .2rem; }
+  .statusbar .doc-name { max-width: 45vw; }
+  #editor { padding: .65rem .75rem; font-size: 16px; }
+  .findbar {
+    inset-inline: .4rem; inset-block-start: .35rem; max-width: none;
+    padding: .45rem .5rem;
+  }
+  .find-row input[type="search"], .find-row input[type="text"] { min-width: 7rem; flex: 1 1 8rem; }
+  dialog { max-width: calc(100vw - 1rem); }
+  .dialog-form { padding: .8rem .9rem; }
+}
+@media (max-width: 420px) {
+  .statusbar #selInfo { display: none; }
+  .toolbar .group:nth-child(2) button { padding-inline: .45rem; }
 }

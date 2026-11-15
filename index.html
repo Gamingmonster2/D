@@ -2,60 +2,96 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>المفكرة — نسخة الويب</title>
-<meta name="description" content="مفكرة عربية تعمل على المتصفح: تحرير نصوص، دعم UTF-8/UTF-16/ANSI، حفظ تلقائي محلي، بحث واستبدال، دعم RTL.">
-<meta name="theme-color" content="#0f172a">
+<meta name="description" data-i18n-content="metaDescription" content="مفكرة عربية تعمل على المتصفح: تحرير نصوص بترميزات UTF-8/UTF-16/ANSI، حفظ تلقائي محلي، بحث واستبدال، دعم RTL، وقابلية التثبيت على الجوال.">
+<meta name="keywords" content="مفكرة أونلاين, محرر نصوص عربي, محرر نصوص على المتصفح, notepad online, arabic text editor, online notepad, UTF-8 editor, UTF-16 editor, ANSI editor, PWA notepad">
 <meta name="application-name" content="المفكرة">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="المفكرة">
+<meta name="theme-color" content="#0f172a">
 <link rel="canonical" href="https://do.com.ly/">
+<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="المفكرة">
+<meta property="og:site_name" content="المفكرة — do.com.ly">
 <meta property="og:locale" content="ar_AR">
+<meta property="og:locale:alternate" content="en_US">
 <meta property="og:title" content="المفكرة — نسخة الويب">
-<meta property="og:description" content="مفكرة عربية تعمل على المتصفح: ترميزات UTF-8/UTF-16/ANSI، حفظ تلقائي محلي، بحث واستبدال، دعم RTL.">
+<meta property="og:description" content="مفكرة عربية تعمل على المتصفح: ترميزات UTF-8/UTF-16/ANSI، حفظ تلقائي محلي، بحث واستبدال، دعم RTL، وتثبيت على الجوال.">
 <meta property="og:url" content="https://do.com.ly/">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://do.com.ly/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="المفكرة — نسخة الويب">
-<meta name="twitter:description" content="مفكرة عربية تعمل على المتصفح بلا خادم: ترميزات كاملة، حفظ تلقائي، دعم RTL.">
+<meta name="twitter:description" content="مفكرة عربية على المتصفح بلا خادم: ترميزات كاملة، حفظ تلقائي، دعم RTL، وقابلة للتثبيت.">
+<meta name="twitter:image" content="https://do.com.ly/assets/og-image.png">
 <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="stylesheet" href="./assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "المفكرة — نسخة الويب",
+  "alternateName": "Notepad — Web Edition",
+  "url": "https://do.com.ly/",
+  "description": "مفكرة عربية مجانية تعمل على المتصفح لتحرير النصوص بترميزات UTF-8 وUTF-16 وANSI، مع بحث واستبدال وحفظ تلقائي محلي ودعم كامل لليمين إلى اليسار، وقابلة للتثبيت على الجوال.",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "inLanguage": ["ar", "en"],
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "فتح وحفظ الملفات النصية بترميزات UTF-8 وUTF-16 وANSI العربية",
+    "كشف تلقائي للترميز ونهاية السطر",
+    "بحث واستبدال مع Regex",
+    "حفظ تلقائي محلي واستعادة المستندات",
+    "دعم العربية RTL والواجهة الإنجليزية",
+    "العمل دون اتصال وتثبيت كتطبيق PWA"
+  ],
+  "screenshot": "https://do.com.ly/assets/og-image.png",
+  "author": { "@type": "Person", "name": "[Saif al-Din] | Game Dev" }
+}
+</script>
 </head>
 <body>
 <div class="app">
   <header class="appbar">
     <div class="title-area">
       <span class="logo" aria-hidden="true">📝</span>
-      <h1 id="docTitle" class="doc-title" role="button" tabindex="0" title="إعادة تسمية المستند (F2)"><span id="docTitleText">المفكرة</span><span class="rename-icon" aria-hidden="true">✏️</span></h1>
-      <span id="dirtyBadge" class="badge" hidden>غير محفوظ</span>
+      <h1 id="docTitle" class="doc-title" role="button" tabindex="0" data-i18n-title="titleRename"><span id="docTitleText">المفكرة</span><span class="rename-icon" aria-hidden="true">✏️</span></h1>
+      <span id="dirtyBadge" class="badge" hidden data-i18n="dirtyBadge">غير محفوظ</span>
     </div>
     <nav class="toolbar" aria-label="شريط الأدوات">
       <div class="group">
-        <button type="button" data-action="new" title="جديد (Ctrl+N)">جديد</button>
-        <button type="button" data-action="open" title="فتح (Ctrl+O)">فتح</button>
-        <button type="button" data-action="save" title="حفظ (Ctrl+S)">حفظ</button>
-        <button type="button" data-action="saveAs" title="حفظ باسم (Ctrl+Shift+S)">حفظ باسم</button>
-        <button type="button" data-action="rename" title="إعادة تسمية المستند (F2)">تسمية</button>
+        <button type="button" data-action="new" data-i18n="new" data-i18n-title="titleNew">جديد</button>
+        <button type="button" data-action="open" data-i18n="open" data-i18n-title="titleOpen">فتح</button>
+        <button type="button" data-action="save" data-i18n="save" data-i18n-title="titleSave">حفظ</button>
+        <button type="button" data-action="saveAs" data-i18n="saveAs" data-i18n-title="titleSaveAs">حفظ باسم</button>
+        <button type="button" data-action="rename" data-i18n="rename" data-i18n-title="titleRename">تسمية</button>
       </div>
       <div class="group">
-        <button type="button" data-action="undo" title="تراجع (Ctrl+Z)">تراجع</button>
-        <button type="button" data-action="redo" title="إعادة (Ctrl+Y)">إعادة</button>
+        <button type="button" data-action="undo" data-i18n="undo" data-i18n-title="titleUndo">تراجع</button>
+        <button type="button" data-action="redo" data-i18n="redo" data-i18n-title="titleRedo">إعادة</button>
       </div>
       <div class="group">
-        <button type="button" data-action="find" title="بحث (Ctrl+F)">بحث</button>
-        <button type="button" data-action="replace" title="استبدال (Ctrl+H)">استبدال</button>
-        <button type="button" data-action="goto" title="انتقال إلى سطر (Ctrl+G)">سطر</button>
+        <button type="button" data-action="find" data-i18n="find" data-i18n-title="titleFind">بحث</button>
+        <button type="button" data-action="replace" data-i18n="replace" data-i18n-title="titleReplace">استبدال</button>
+        <button type="button" data-action="goto" data-i18n="goto" data-i18n-title="titleGoto">سطر</button>
       </div>
       <div class="group">
-        <button type="button" data-action="font" title="الخط">الخط</button>
-        <button type="button" data-action="wrap" id="wrapBtn" title="التفاف النص" aria-pressed="true">التفاف</button>
-        <button type="button" data-action="dir" id="dirBtn" title="اتجاه النص">الاتجاه: تلقائي</button>
-        <button type="button" data-action="theme" id="themeBtn" title="المظهر">المظهر</button>
+        <button type="button" data-action="font" data-i18n="font" data-i18n-title="titleFont">الخط</button>
+        <button type="button" data-action="wrap" id="wrapBtn" data-i18n="wrap" data-i18n-title="titleWrap" aria-pressed="true">التفاف</button>
+        <button type="button" data-action="dir" id="dirBtn" data-i18n-title="titleDir">الاتجاه</button>
+        <button type="button" data-action="theme" id="themeBtn" data-i18n-title="titleTheme">المظهر</button>
       </div>
       <div class="group">
-        <button type="button" data-action="print" title="طباعة (Ctrl+P)">طباعة</button>
-        <button type="button" data-action="about" title="حول التطبيق">حول</button>
+        <button type="button" data-action="print" data-i18n="print" data-i18n-title="titlePrint">طباعة</button>
+        <button type="button" data-action="install" id="installBtn" data-i18n="install" data-i18n-title="titleInstall" hidden>تثبيت التطبيق</button>
+        <button type="button" data-action="lang" id="langBtn" data-i18n="language" data-i18n-title="titleLanguage">English</button>
+        <button type="button" data-action="about" data-i18n="about" data-i18n-title="titleAbout">حول</button>
       </div>
     </nav>
   </header>
@@ -63,8 +99,8 @@
   <div id="restoreBanner" class="banner" hidden>
     <span id="restoreInfo"></span>
     <div class="banner-actions">
-      <button type="button" id="restoreBtn" class="primary">استعادة</button>
-      <button type="button" id="discardBtn">تجاهل</button>
+      <button type="button" id="restoreBtn" class="primary" data-i18n="restore">استعادة</button>
+      <button type="button" id="discardBtn" data-i18n="ignore">تجاهل</button>
     </div>
   </div>
 
@@ -73,38 +109,38 @@
 
     <section id="findBar" class="findbar" hidden aria-label="بحث واستبدال">
       <div class="find-row">
-        <input id="findInput" type="search" placeholder="بحث…" aria-label="نص البحث">
+        <input id="findInput" type="search" data-i18n-placeholder="findPlaceholder" placeholder="بحث…" aria-label="نص البحث">
         <span id="findCount" class="hint" aria-live="polite"></span>
-        <button type="button" data-find="next" title="التالي (F3)">التالي</button>
-        <button type="button" data-find="prev" title="السابق (Shift+F3)">السابق</button>
-        <label><input type="checkbox" id="matchCase"> حالة الأحرف</label>
-        <label><input type="checkbox" id="useRegex"> Regex</label>
-        <label><input type="checkbox" id="wrapSearch" checked> التفاف</label>
-        <button type="button" data-find="close" class="icon" title="إغلاق (Esc)" aria-label="إغلاق البحث">✕</button>
+        <button type="button" data-find="next" data-i18n="next">التالي</button>
+        <button type="button" data-find="prev" data-i18n="prev">السابق</button>
+        <label><input type="checkbox" id="matchCase"> <span data-i18n="matchCase">حالة الأحرف</span></label>
+        <label><input type="checkbox" id="useRegex"> <span data-i18n="regex">Regex</span></label>
+        <label><input type="checkbox" id="wrapSearch" checked> <span data-i18n="wrapSearch">التفاف</span></label>
+        <button type="button" data-find="close" class="icon" data-i18n-title="close" title="إغلاق (Esc)" data-i18n-aria-label="close" aria-label="إغلاق البحث">✕</button>
       </div>
       <div class="find-row replace-row">
-        <input id="replaceInput" type="text" placeholder="استبدال بـ…" aria-label="نص الاستبدال">
-        <button type="button" data-find="replace">استبدال</button>
-        <button type="button" data-find="replaceAll">استبدال الكل</button>
+        <input id="replaceInput" type="text" data-i18n-placeholder="replacePlaceholder" placeholder="استبدال بـ…" aria-label="نص الاستبدال">
+        <button type="button" data-find="replace" data-i18n="replaceOne">استبدال</button>
+        <button type="button" data-find="replaceAll" data-i18n="replaceAll">استبدال الكل</button>
       </div>
     </section>
   </main>
 
   <footer class="statusbar">
-    <span id="docName" class="doc-name" role="button" tabindex="0" title="إعادة تسمية (F2)">بدون عنوان</span>
+    <span id="docName" class="doc-name" role="button" tabindex="0" data-i18n-title="titleRename" title="إعادة تسمية (F2)">بدون عنوان</span>
     <span id="posInfo">سطر 1، عمود 1</span>
     <span id="selInfo"></span>
     <span id="counts">0 حرف</span>
-    <label class="field">الترميز <select id="encodingSel" aria-label="الترميز"></select></label>
-    <label class="field">نهاية السطر <select id="eolSel" aria-label="نهاية السطر"></select></label>
+    <label class="field"><span data-i18n="encoding">الترميز</span> <select id="encodingSel" aria-label="الترميز"></select></label>
+    <label class="field"><span data-i18n="eol">نهاية السطر</span> <select id="eolSel" aria-label="نهاية السطر"></select></label>
     <span id="saveState" class="state">جاهز</span>
   </footer>
 </div>
 
 <dialog id="fontDialog">
   <form method="dialog" class="dialog-form">
-    <h2>الخط</h2>
-    <label>عائلة الخط
+    <h2 data-i18n="fontTitle">الخط</h2>
+    <label><span data-i18n="fontFamily">عائلة الخط</span>
       <select id="fontFamilySel">
         <option value="Segoe UI">Segoe UI</option>
         <option value="Tahoma">Tahoma</option>
@@ -114,59 +150,65 @@
         <option value="Traditional Arabic">Traditional Arabic</option>
         <option value="Courier New">Courier New</option>
         <option value="Consolas">Consolas</option>
-        <option value="system-ui">خط النظام</option>
+        <option value="system-ui" data-i18n="fontSystem">خط النظام</option>
       </select>
     </label>
-    <label>الحجم (px)
+    <label><span data-i18n="fontSize">الحجم (px)</span>
       <input id="fontSizeInput" type="number" min="8" max="72" step="1" value="16">
     </label>
     <div class="dialog-actions">
-      <button type="submit" class="primary" id="fontApply">تطبيق</button>
-      <button type="button" id="fontCancel">إلغاء</button>
+      <button type="submit" class="primary" id="fontApply" data-i18n="apply">تطبيق</button>
+      <button type="button" id="fontCancel" data-i18n="cancel">إلغاء</button>
     </div>
   </form>
 </dialog>
 
 <dialog id="gotoDialog">
   <form method="dialog" class="dialog-form">
-    <h2>انتقال إلى السطر</h2>
-    <label>رقم السطر
+    <h2 data-i18n="gotoTitle">انتقال إلى السطر</h2>
+    <label><span data-i18n="lineNumber">رقم السطر</span>
       <input id="gotoInput" type="number" min="1" step="1" value="1">
     </label>
     <div class="dialog-actions">
-      <button type="submit" class="primary" id="gotoApply">انتقال</button>
-      <button type="button" id="gotoCancel">إلغاء</button>
-    </div>
-  </form>
-</dialog>
-
-<dialog id="aboutDialog">
-  <form method="dialog" class="dialog-form">
-    <h2>حول المفكرة — نسخة الويب</h2>
-    <p>نسخة ويب مستوحاة من المفكرة في ويندوز، مبنية بعد تحليل أداة <code>Notepad.exe</code> بالأدوات REA + Ghidra.</p>
-    <ul class="features">
-      <li>فتح/حفظ ملفات نصية مع ترميزات UTF-8 وUTF-8 BOM وUTF-16 LE/BE وANSI.</li>
-      <li>كشف تلقائي للترميز ونهاية السطر وتطبيق ميزة <code>.LOG</code>.</li>
-      <li>بحث واستبدال مع Regex، انتقال إلى سطر، إدراج التاريخ.</li>
-      <li>حفظ تلقائي محلي واستعادة المستندات غير المحفوظة.</li>
-      <li>دعم كامل للعربية واتجاه النص (RTL) ووضع داكن.</li>
-      <li>يعمل دون اتصال (PWA) وقابل للنشر على Cloudflare Pages.</li>
-    </ul>
-    <div class="dialog-actions">
-      <button type="submit" class="primary">إغلاق</button>
+      <button type="submit" class="primary" id="gotoApply" data-i18n="go">انتقال</button>
+      <button type="button" id="gotoCancel" data-i18n="cancel">إلغاء</button>
     </div>
   </form>
 </dialog>
 
 <dialog id="renameDialog">
   <form method="dialog" class="dialog-form">
-    <h2>عنوان المستند</h2>
-    <label>العنوان
-      <input id="renameInput" type="text" maxlength="120" placeholder="مثال: ملاحظاتي">
+    <h2 data-i18n="renameTitle">عنوان المستند</h2>
+    <label><span data-i18n="renameLabel">العنوان</span>
+      <input id="renameInput" type="text" maxlength="120" data-i18n-placeholder="renamePlaceholder" placeholder="مثال: ملاحظاتي">
     </label>
     <div class="dialog-actions">
-      <button type="submit" class="primary" id="renameApply">تطبيق</button>
-      <button type="button" id="renameCancel">إلغاء</button>
+      <button type="submit" class="primary" id="renameApply" data-i18n="apply">تطبيق</button>
+      <button type="button" id="renameCancel" data-i18n="cancel">إلغاء</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="aboutDialog">
+  <form method="dialog" class="dialog-form">
+    <h2 data-i18n="aboutTitle">حول المفكرة — نسخة الويب</h2>
+    <p data-i18n="aboutIntro"></p>
+    <ul class="features">
+      <li data-i18n="aboutF1"></li>
+      <li data-i18n="aboutF2"></li>
+      <li data-i18n="aboutF3"></li>
+      <li data-i18n="aboutF4"></li>
+      <li data-i18n="aboutF5"></li>
+      <li data-i18n="aboutF6"></li>
+    </ul>
+    <p data-i18n="aboutSeoBody"></p>
+    <p class="about-links"><span data-i18n="aboutLinks">صفحات التعريف:</span>
+      <a href="./about.html" data-i18n="aboutPage">عن المفكرة (عربي)</a> ·
+      <a href="./about-en.html" data-i18n="aboutPageEn">About Notepad (English)</a>
+    </p>
+    <p class="install-hint" data-i18n="aboutInstall"></p>
+    <div class="dialog-actions">
+      <button type="submit" class="primary" data-i18n="closeAbout">إغلاق</button>
     </div>
   </form>
 </dialog>
