@@ -854,6 +854,7 @@ function handleAction(action) {
     case 'theme': toggleTheme(); break;
     case 'print': printDocument(); break;
     case 'clean': els.cleanDialog.showModal(); break;
+    case 'help': window.open('./help.html', '_blank', 'noopener'); break;
     case 'about': els.aboutDialog.showModal(); break;
     case 'install': installApp(); break;
     case 'lang': applyLanguage(true); break;
